@@ -153,6 +153,7 @@ Sunday (Solaris), OpenKeys (OpenBSD), Poison (FreeBSD), Spectra (ChromeOS)
 ## Machines by Technique Category
 
 ### Web Exploitation
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Cronos | SQL Injection, Command Injection |
@@ -171,6 +172,7 @@ Sunday (Solaris), OpenKeys (OpenBSD), Poison (FreeBSD), Spectra (ChromeOS)
 | Devvortex | Joomla API Info Disclosure |
 
 ### Active Directory / Windows Domain
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Monteverde | Azure AD Connect |
@@ -179,6 +181,7 @@ Sunday (Solaris), OpenKeys (OpenBSD), Poison (FreeBSD), Spectra (ChromeOS)
 | Cicada | SMB Enumeration, SeBackupPrivilege |
 
 ### Deserialization
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Json | .NET JSON Deserialization |
@@ -189,6 +192,7 @@ Sunday (Solaris), OpenKeys (OpenBSD), Poison (FreeBSD), Spectra (ChromeOS)
 | Tenet | PHP Object Deserialization |
 
 ### Template Injection (SSTI)
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Sandworm | SSTI in PGP Verification (Jinja2) |
@@ -199,6 +203,7 @@ Sunday (Solaris), OpenKeys (OpenBSD), Poison (FreeBSD), Spectra (ChromeOS)
 | Nunchucks | Nunjucks SSTI |
 
 ### LFI / File Read
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Nineveh | LFI + Chkrootkit |
@@ -209,6 +214,7 @@ Sunday (Solaris), OpenKeys (OpenBSD), Poison (FreeBSD), Spectra (ChromeOS)
 | Pilgrimage | ImageMagick Arbitrary File Read |
 
 ### Binary Exploitation / Custom Protocols
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Ellingson | Custom SUID ROP Exploit |
@@ -217,6 +223,7 @@ Sunday (Solaris), OpenKeys (OpenBSD), Poison (FreeBSD), Spectra (ChromeOS)
 | Node | Kernel Exploit CVE-2017-16995 |
 
 ### Container / Virtualization Escape
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Tabby | LXD Group Container Mount |

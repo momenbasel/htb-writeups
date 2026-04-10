@@ -202,6 +202,7 @@ shell.jpg.php (if server checks first extension)
 ```bash
 # Separators
 ; id
+
 | id
 || id
 & id

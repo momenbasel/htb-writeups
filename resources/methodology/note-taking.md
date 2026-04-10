@@ -24,6 +24,7 @@ Structured template for documenting your HTB machine progress.
 [Paste full nmap output]
 
 ### Open Ports Summary
+
 | Port | Service | Version |
 |------|---------|---------|
 | 22   | SSH     | OpenSSH 8.9p1 |
@@ -48,6 +49,7 @@ Structured template for documenting your HTB machine progress.
 - /api - API endpoint
 
 ### Credentials Found
+
 | Username | Password | Where Found |
 |----------|----------|-------------|
 | admin    | password | config file |

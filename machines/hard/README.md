@@ -97,6 +97,7 @@ Chainsaw, Ellingson, Falafel, Stacked, Oouch, Travel, Patents, Intense, Quick, U
 ## Machines by Technique Category
 
 ### Active Directory
+
 | Machine | Specific AD Technique |
 |---------|-----------------------|
 | Sizzle | ADCS, SCF File, Kerberoasting, CLM Bypass |
@@ -121,6 +122,7 @@ Chainsaw, Ellingson, Falafel, Stacked, Oouch, Travel, Patents, Intense, Quick, U
 | EscapeTwo | NTLM Relay, ADCS ESC4 |
 
 ### ADCS (Active Directory Certificate Services)
+
 | Machine | ESC Variant |
 |---------|-------------|
 | Sizzle | Certificate-Based Auth |
@@ -133,6 +135,7 @@ Chainsaw, Ellingson, Falafel, Stacked, Oouch, Travel, Patents, Intense, Quick, U
 | EscapeTwo | ESC4 |
 
 ### Web Exploitation (Advanced)
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Falafel | Type Juggling + Boolean Blind SQLi |
@@ -146,6 +149,7 @@ Chainsaw, Ellingson, Falafel, Stacked, Oouch, Travel, Patents, Intense, Quick, U
 | MonitorsThree | Cacti SQLi + Duplicati |
 
 ### Binary Exploitation
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Tally | SQL Server + Rotten Potato |
@@ -156,6 +160,7 @@ Chainsaw, Ellingson, Falafel, Stacked, Oouch, Travel, Patents, Intense, Quick, U
 | NanoCorp | Custom Protocol Binary Analysis |
 
 ### Deserialization (Advanced)
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Scramble | .NET BinaryFormatter |
@@ -165,11 +170,13 @@ Chainsaw, Ellingson, Falafel, Stacked, Oouch, Travel, Patents, Intense, Quick, U
 | Napper | .NET Implant Reversing |
 
 ### Blockchain / Smart Contract
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Chainsaw | Solidity Smart Contract Exploit via Ganache |
 
 ### Container / Cloud
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Stacked | AWS LocalStack Lambda Abuse |
@@ -179,6 +186,7 @@ Chainsaw, Ellingson, Falafel, Stacked, Oouch, Travel, Patents, Intense, Quick, U
 | Cerberus | Linux-to-Windows Pivot via SSSD |
 
 ### SSRF Chains
+
 | Machine | Specific Technique |
 |---------|--------------------|
 | Travel | SSRF + Memcached Poisoning |
@@ -216,6 +224,7 @@ For each machine, recommended external writeup sources:
 ## Certification Relevance
 
 ### OSCP (Hard machines that build OSCP skills)
+
 | Machine | Why |
 |---------|-----|
 | Tally | Multi-service enumeration, SQL Server, Potato attack |
@@ -223,6 +232,7 @@ For each machine, recommended external writeup sources:
 | Falafel | SQLi + creative file write |
 
 ### OSEP (Evasion and advanced exploitation)
+
 | Machine | Why |
 |---------|-----|
 | Reel | Phishing + AppLocker bypass |
@@ -230,6 +240,7 @@ For each machine, recommended external writeup sources:
 | Object | Jenkins + AD ACL chain |
 
 ### CPTS / CRTO (Active Directory focus)
+
 | Machine | Why |
 |---------|-----|
 | Vintage | Pure AD, Kerberoasting, RBCD, DCSync |
@@ -239,6 +250,7 @@ For each machine, recommended external writeup sources:
 | Absolute | Shadow Credentials + Kerberos Relay |
 
 ### CRTE (Red Team / Evasion)
+
 | Machine | Why |
 |---------|-----|
 | Sizzle | Full AD chain with evasion |

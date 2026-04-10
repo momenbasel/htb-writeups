@@ -21,6 +21,7 @@ permalink: /prolabs/
 - **Subnet 2 (172.16.2.0/24):** Internal network requiring pivoting through bastion host
 
 ### Known Machines
+
 | Machine | Role | Key Techniques |
 |---------|------|----------------|
 | DANTE-WEB-NIX01 | Web server (entry point) | Web exploitation, initial foothold |
@@ -65,6 +66,7 @@ permalink: /prolabs/
 - **4 Active Directory Domains:** Multi-domain forest with trust relationships
 
 ### Techniques Covered
+
 | Category | Specific Techniques |
 |----------|-------------------|
 | Web Exploitation | PHP RFI, CMS exploitation, web shells |
@@ -101,6 +103,7 @@ permalink: /prolabs/
 Created by Rastamouse (creator of CRTO certification). Simulates a realistic corporate environment where all systems are reasonably patched, forcing reliance on misconfigurations and AD weaknesses rather than CVEs.
 
 ### Techniques Covered
+
 | Category | Specific Techniques |
 |----------|-------------------|
 | Initial Access | Phishing campaigns, OSINT on company info |
@@ -142,6 +145,7 @@ Created by Rastamouse (creator of CRTO certification). Simulates a realistic cor
 - Each domain has corresponding servers and workstations
 
 ### Techniques Covered
+
 | Category | Specific Techniques |
 |----------|-------------------|
 | AD Enumeration | BloodHound, domain trust mapping |
@@ -177,6 +181,7 @@ Created by Rastamouse (creator of CRTO certification). Simulates a realistic cor
 Immersive enterprise AD environment with advanced infrastructure and strong security posture. Systems are fully patched with hardened OS configurations. AV catches default payloads.
 
 ### Techniques Covered
+
 | Category | Specific Techniques |
 |----------|-------------------|
 | AV Evasion | Custom C# payloads, encrypted payloads, obfuscation |
@@ -209,6 +214,7 @@ Immersive enterprise AD environment with advanced infrastructure and strong secu
 The most challenging ProLab. Simulates a targeted attack by an external threat agent against a Managed Service Provider (MSP). No CVEs are needed - all attacks exploit misconfigurations and trust relationships. Requires C2 framework usage (Cobalt Strike recommended).
 
 ### Techniques Covered
+
 | Category | Specific Techniques |
 |----------|-------------------|
 | APT Simulation | Long-lasting TTPs, patient attack chains |

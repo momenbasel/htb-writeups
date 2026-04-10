@@ -106,6 +106,7 @@ The fourth company-created fortress on HTB. Created by Synacktiv, a well-known F
 Created by Amazon Web Services to showcase cloud security concepts. Features realistic techniques ranging from web exploitation to cloud privilege escalations for services used by thousands of businesses. Available to Hacker rank and above.
 
 ### Key Techniques
+
 | Category | Specific Techniques |
 |----------|-------------------|
 | Web | OWASP Top 10 exploitation |

@@ -184,12 +184,12 @@ DFIR (Digital Forensics & Incident Response) investigation labs. Blue team scena
 | Noted | Easy | Notepad++ Artifacts, Data Extortion | [0xdf](https://0xdf.gitlab.io/2024/06/13/htb-sherlock-noted.html) |
 | Knock Knock | Easy | PCAP, FTP, Port Knocking, GonnaCry Ransomware | [0xdf](https://0xdf.gitlab.io/2023/12/04/htb-sherlock-knock-knock.html) |
 | Bumblebee | Easy | phpBB SQLite, Access Log Analysis | [0xdf](https://0xdf.gitlab.io/2024/05/22/htb-sherlock-bumblebee.html) |
-| Crown Jewel-1 | Medium | NTDS.dit Dump, Volume Shadow Copy Service | [Medium](https://stumblesec.com/hackthebox-crownjewel-1-sherlock-walkthrough-2efb81522f2c) |
+| Crown Jewel-1 | Medium | NTDS.dit Dump, Volume Shadow Copy Service | [CyberWired](https://www.cyberwiredtraining.net/writeups/htb-sherlock-crownjewel-1-jezdr) |
 | Noxious | Medium | LLMNR Poisoning, Rogue Device Detection | [0xdf](https://0xdf.gitlab.io/2024/09/04/htb-sherlock-noxious.html) |
 | Subatomic | Medium | Electron Malware, Discord Hijacking | [0xdf](https://0xdf.gitlab.io/2024/04/18/htb-sherlock-subatomic.html) |
 | Nubilum-1 | Medium | AWS CloudTrail, PoshC2, Cloud Forensics | [0xdf](https://0xdf.gitlab.io/2024/05/30/htb-sherlock-nubilum-1.html) |
-| MisCloud | Medium | GCP Breach, Gitea Vulnerability | [Medium](https://prajshete17.medium.com/writeup-htb-sherlocks-miscloud-medium-93831e2fbf42) |
-| OpTinselTrace (1-5) | Hard | Full APT Campaign Investigation (Christmas 2023) | [Medium](https://medium.com/@ari.null/optinseltrace-3-hack-the-box-sherlock-writeup-dae64f3512fe) |
+| MisCloud | Medium | GCP Breach, Gitea Vulnerability | [CyberEthical](https://blog.cyberethical.me/htb-sherlock-miscloud) |
+| OpTinselTrace (1-5) | Hard | Full APT Campaign Investigation (Christmas 2023) | [GitHub](https://github.com/dbissell6/DFIR/blob/main/WalkThroughs/OpTinselTrace-1-5.md) |
 | APTNightmare | Hard | Advanced Persistent Threat Investigation | [GitHub](https://github.com/jon-brandy/hackthebox/blob/main/Categories/Sherlocks/APTNightmare/README.md) |
 
 See the [full Sherlocks index](sherlocks/README.md) for 70+ Sherlocks with writeup links.

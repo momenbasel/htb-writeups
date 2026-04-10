@@ -199,6 +199,7 @@ permalink: /machines/easy/
 ## Machines by Technique
 
 ### Web Exploitation
+
 | Technique | Machines |
 |-----------|----------|
 | SQL Injection | Cronos, Trick, Validation, MetaTwo, PC, Usage, Pandora, Pilgrimage |
@@ -212,6 +213,7 @@ permalink: /machines/easy/
 | Deserialization | Precious, NodeBlog |
 
 ### Active Directory
+
 | Technique | Machines |
 |-----------|----------|
 | Kerberoasting | Active |
@@ -223,6 +225,7 @@ permalink: /machines/easy/
 | BloodHound Enum | Forest, Sauna |
 
 ### Classic Network Exploits
+
 | Technique | Machines |
 |-----------|----------|
 | EternalBlue (MS17-010) | Blue, Legacy |
@@ -233,6 +236,7 @@ permalink: /machines/easy/
 | Default Credentials | Jerry, Mirai, WifineticTwo |
 
 ### Privilege Escalation Techniques
+
 | Technique | Machines |
 |-----------|----------|
 | Sudo Misconfig | Shocker, Knife, Bashed, OpenAdmin, Armageddon |
@@ -288,6 +292,7 @@ permalink: /machines/easy/
 ## External Resources
 
 ### Top Writeup Authors
+
 | Author | URL | Notes |
 |--------|-----|-------|
 | 0xdf | [0xdf.gitlab.io](https://0xdf.gitlab.io/) | Gold standard HTB writeups, covers nearly every machine |
@@ -297,6 +302,7 @@ permalink: /machines/easy/
 | Hackplayers | [github.com/Hackplayers](https://github.com/Hackplayers/hackthebox-writeups) | Community repo (2000+ stars) |
 
 ### Machine Lists & Trackers
+
 | Resource | URL |
 |----------|-----|
 | TJNull OSCP-Like List | [NetSecFocus Trophy Room](https://docs.google.com/spreadsheets/d/1dwSMIAPIam0PuRBkCiDI88pU3yzrqqHkDtBngUHNCw8/) |
