@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "forensics"
+title: "Forensics"
 parent: Challenges
 nav_order: 3
 permalink: /challenges/forensics/

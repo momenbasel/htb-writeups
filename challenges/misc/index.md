@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "misc"
+title: "Misc"
 parent: Challenges
 nav_order: 9
 permalink: /challenges/misc/

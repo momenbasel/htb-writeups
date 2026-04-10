@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "osint"
+title: "OSINT"
 parent: Challenges
 nav_order: 8
 permalink: /challenges/osint/

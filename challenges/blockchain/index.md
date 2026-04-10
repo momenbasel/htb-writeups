@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "ulockchain"
+title: "Blockchain"
 parent: Challenges
 nav_order: 11
 permalink: /challenges/blockchain/

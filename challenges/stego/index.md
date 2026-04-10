@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "stego"
+title: "Stego"
 parent: Challenges
 nav_order: 10
 permalink: /challenges/stego/

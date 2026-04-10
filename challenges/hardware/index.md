@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "hardware"
+title: "Hardware"
 parent: Challenges
 nav_order: 7
 permalink: /challenges/hardware/

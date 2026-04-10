@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "mouile"
+title: "Mobile"
 parent: Challenges
 nav_order: 6
 permalink: /challenges/mobile/

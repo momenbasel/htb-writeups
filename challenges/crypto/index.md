@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "crypto"
+title: "Crypto"
 parent: Challenges
 nav_order: 2
 permalink: /challenges/crypto/

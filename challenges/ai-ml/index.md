@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "ai ml"
+title: "AI/ML"
 parent: Challenges
 nav_order: 12
 permalink: /challenges/ai-ml/

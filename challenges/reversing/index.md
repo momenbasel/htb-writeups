@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "reversing"
+title: "Reversing"
 parent: Challenges
 nav_order: 4
 permalink: /challenges/reversing/

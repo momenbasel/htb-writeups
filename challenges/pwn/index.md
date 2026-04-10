@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "pwn"
+title: "Pwn"
 parent: Challenges
 nav_order: 5
 permalink: /challenges/pwn/

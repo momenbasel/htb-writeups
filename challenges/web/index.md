@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "web"
+title: "Web"
 parent: Challenges
 nav_order: 1
 permalink: /challenges/web/
