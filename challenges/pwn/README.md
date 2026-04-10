@@ -8,7 +8,7 @@ permalink: /challenges/pwn/
 
 ## Pwn Challenges
 
-Full list of 61 pwn challenges: see [pwn/README.md](pwn/README.md) or browse [7Rocky Pwn Index](https://7rocky.github.io/en/ctf/htb-challenges/pwn/).
+Full list of 61 pwn challenges below, or browse the [7Rocky Pwn Index](https://7rocky.github.io/en/ctf/htb-challenges/pwn/).
 
 | # | Challenge | Difficulty | Key Techniques | Writeup |
 |---|-----------|-----------|----------------|---------|

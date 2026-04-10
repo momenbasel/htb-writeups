@@ -18,9 +18,9 @@ Sherlocks are defensive security labs that simulate real-world security incident
 
 | Difficulty | Path | Count | Focus |
 |------------|------|-------|-------|
-| [Easy](#easy-sherlocks) | [`sherlocks/easy/`](easy/) | 25+ | Log Analysis, Basic DFIR, Simple Malware Triage |
-| [Medium](#medium-sherlocks) | [`sherlocks/medium/`](medium/) | 30+ | Memory Forensics, AD Attacks, Cloud IR, Complex Malware |
-| [Hard](#hard-sherlocks) | [`sherlocks/hard/`](hard/) | 15+ | APT Investigation, Complex IR, Multi-Source Correlation |
+| [Easy](#easy-sherlocks) | Easy | 25+ | Log Analysis, Basic DFIR, Simple Malware Triage |
+| [Medium](#medium-sherlocks) | Medium | 30+ | Memory Forensics, AD Attacks, Cloud IR, Complex Malware |
+| [Hard](#hard-sherlocks) | Hard | 15+ | APT Investigation, Complex IR, Multi-Source Correlation |
 | [Insane](#insane-sherlocks) | - | 5+ | Full-Scale Incident Response, Advanced Threat Actor Attribution |
 
 ---

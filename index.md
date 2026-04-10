@@ -95,7 +95,7 @@ The most comprehensive Hack The Box writeup collection on GitHub.
 
 ### For Beginners
 1. Start with [Easy machines](machines/easy/) - they teach fundamentals
-2. Follow the [Machine Approach Guide](resources/methodology/machine-approach/) for a systematic method
+2. Follow the [Machine Approach Guide](resources/methodology/) for a systematic method
 3. Use the [OSCP Prep](resources/cert-prep/) list if you are studying for certs
 4. Explore the [Skill Trees](/htb-writeups/skill-trees/) to plan your learning path
 
