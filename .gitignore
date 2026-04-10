@@ -1,0 +1,19 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Build artifacts
+node_modules/
+__pycache__/
+
+# Sensitive
+*.ovpn
+*.vpn
+flags.txt
