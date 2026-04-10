@@ -1,3 +1,11 @@
+---
+layout: default
+title: "Sink"
+parent: Insane Machines
+grand_parent: Machines
+permalink: /machines/insane/sink/
+---
+
 # Sink
 
 ![Machine Badge](https://img.shields.io/badge/Machine-Sink-blue)
