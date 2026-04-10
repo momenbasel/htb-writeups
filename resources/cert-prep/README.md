@@ -1,3 +1,12 @@
+---
+layout: default
+title: Cert Prep
+parent: Resources
+nav_order: 3
+description: "OSCP, CPTS, CRTO, CRTE, eWPT certification preparation with HTB"
+permalink: /resources/cert-prep/
+---
+
 # Certification Preparation with HTB
 
 Map your HTB journey to professional security certifications.

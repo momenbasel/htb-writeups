@@ -1,3 +1,11 @@
+---
+layout: default
+title: ProLabs
+nav_order: 4
+description: "HTB ProLab walkthroughs - Dante, Offshore, RastaLabs, Zephyr, Cybernetics, APTLabs"
+permalink: /prolabs/
+---
+
 # HackTheBox ProLabs - Detailed Walkthroughs
 
 > Enterprise-grade lab environments simulating real corporate networks. Each covers multi-machine attack paths, lateral movement, and domain dominance.

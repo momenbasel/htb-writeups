@@ -1,3 +1,12 @@
+---
+layout: default
+title: Insane Machines
+parent: Machines
+nav_order: 4
+description: "25+ Insane HTB machine writeups with walkthroughs"
+permalink: /machines/insane/
+---
+
 # HackTheBox INSANE Difficulty Machines - Complete Reference
 
 > Exhaustive list of ALL known retired Insane-rated HTB machines with key techniques and writeup links.

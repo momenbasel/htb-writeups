@@ -1,3 +1,11 @@
+---
+layout: default
+title: Fortresses
+nav_order: 8
+description: "HTB Fortress challenge walkthroughs"
+permalink: /fortresses/
+---
+
 # HackTheBox Fortresses - Complete Reference
 
 > Fortresses are like normal machines but on steroids - single hosts with multiple flags requiring diverse exploitation techniques. Created by partner companies to showcase real-world attack vectors.

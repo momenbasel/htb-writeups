@@ -1,68 +1,23 @@
-# OSINT Challenges
+---
+layout: default
+title: "OSINT"
+parent: Challenges
+nav_order: 8
+permalink: /challenges/osint/
+---
 
-Writeups for HTB Open Source Intelligence challenges.
+## OSINT Challenges
 
-## Challenge Index
+| # | Challenge | Difficulty | Key Techniques | Writeup |
+|---|-----------|-----------|----------------|---------|
+| 1 | Easy Phish | Very Easy | DNS, SPF/DMARC Records | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/osint/) |
+| 2 | Infiltration | Easy | LinkedIn, Instagram Recon | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/osint/) |
+| 3 | Missing in Action | Easy | LinkedIn, Twitter, Google Dorks | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/osint/) |
+| 4 | Money Flowz | Medium | Reddit, Ropsten Ethereum Chain | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/osint/) |
+| 5 | Monstrosity | Medium | Twitter API, Geolocation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/osint/) |
+| 6 | Various Easy OSINT | Easy | Multi-Source OSINT | [Medium - Vinayak](https://vinayakagrawal95.medium.com/easy-osint-challenges-hack-the-box-3bb3da3f186d) |
+| 7 | Various Medium OSINT | Medium | Advanced OSINT Techniques | [Medium - Vinayak](https://vinayakagrawal95.medium.com/medium-osint-challenges-writeup-hack-the-box-a170fa2b4fa) |
+| 8-14 | Cyber Apocalypse 2025 OSINT (7 challenges) | Various | Geolocation, Social Media, Public Records | [Medium - Carson](https://blog.carsonshaffer.me/hack-the-box-cyber-apocalypse-ctf-2025-osint-writeup-c5ab878b700c) |
 
-| Challenge | Difficulty | Techniques | Key Takeaway |
-|-----------|-----------|------------|--------------|
-| [Money Flowz](money-flowz/) | Very Easy | Cryptocurrency, Blockchain Explorer | Tracing crypto transactions |
-| [Easy Phish](easy-phish/) | Very Easy | DNS, SPF/DMARC | Email authentication records |
-| [Infiltrator](infiltrator/) | Easy | LinkedIn, Social Engineering | Corporate intelligence gathering |
-| [ID Exposed](id-exposed/) | Easy | Metadata, Image Analysis | EXIF data extraction |
-| [KafkaConnect](kafka-connect/) | Easy | Git History, Secrets | Finding secrets in public repos |
-| [Veni, vidi, vici](veni/) | Medium | Geolocation, Google Earth | Image-based geolocation |
-| [Way Back](way-back/) | Medium | Wayback Machine, Web Archives | Finding historical website content |
-| [Digital Ghost](digital-ghost/) | Hard | Multi-Source OSINT | Correlating data across platforms |
+---
 
-## Techniques
-
-### DNS/Email
-```bash
-# DNS records
-dig domain.htb ANY
-dig domain.htb TXT
-dig domain.htb MX
-
-# SPF/DMARC
-dig domain.htb TXT | grep spf
-dig _dmarc.domain.htb TXT
-
-# WHOIS
-whois domain.htb
-```
-
-### Image Analysis
-```bash
-# EXIF data
-exiftool image.jpg
-
-# Reverse image search
-# Google Images, TinEye, Yandex
-
-# Geolocation from images
-# Google Maps, Google Earth, GeoGuessr techniques
-```
-
-### Social Media
-- LinkedIn - Company employees, roles, tech stack
-- GitHub - Code repos, commit history, secrets
-- Twitter/X - Company updates, employee posts
-
-### Web Archives
-- Wayback Machine (web.archive.org)
-- Google Cache
-- Archive.today
-
-## Tools
-
-| Tool | Purpose |
-|------|---------|
-| Maltego | Link analysis and visualization |
-| theHarvester | Email, subdomain, name collection |
-| Sherlock | Username search across platforms |
-| SpiderFoot | Automated OSINT collection |
-| exiftool | Image metadata extraction |
-| Shodan | Internet device search |
-| Censys | Internet-wide scanning data |
-| OSINT Framework | Collection of OSINT tools |

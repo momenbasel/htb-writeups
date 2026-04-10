@@ -1,3 +1,11 @@
+---
+layout: default
+title: CTF Events
+nav_order: 6
+description: "Official HTB CTF event writeups from 2023-2026"
+permalink: /ctf-events/
+---
+
 # HTB CTF Events - Comprehensive Index (2023-2026)
 
 Writeups and challenge indexes from all official Hack The Box competitive CTF events.

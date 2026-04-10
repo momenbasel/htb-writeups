@@ -1,3 +1,11 @@
+---
+layout: default
+title: Sherlocks
+nav_order: 5
+description: "70+ HTB Sherlock DFIR investigation writeups"
+permalink: /sherlocks/
+---
+
 # HackTheBox Sherlocks - Comprehensive Index
 
 > Complete index of all known HackTheBox Sherlock DFIR investigation labs with writeup links, difficulty ratings, categories, and key techniques.

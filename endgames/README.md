@@ -1,3 +1,11 @@
+---
+layout: default
+title: Endgames
+nav_order: 7
+description: "HTB Endgame scenario walkthroughs"
+permalink: /endgames/
+---
+
 # HackTheBox Endgames - Complete Walkthroughs
 
 > Multi-machine, multi-stage scenarios simulating real penetration testing engagements. Each endgame contains multiple flags across an interconnected network.

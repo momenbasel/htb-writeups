@@ -1,59 +1,90 @@
-# Web Challenges
+---
+layout: default
+title: "Web"
+parent: Challenges
+nav_order: 1
+permalink: /challenges/web/
+---
 
-Writeups for HTB Web exploitation challenges.
+## Web Challenges
 
-## Challenge Index
+| # | Challenge | Difficulty | Key Techniques | Writeup |
+|---|-----------|-----------|----------------|---------|
+| 1 | Trapped Source | Very Easy | Client-Side Source Analysis | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 2 | Templated | Very Easy | Jinja2 SSTI | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 3 | Flag Command | Very Easy | API Exploitation, Command Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 4 | looking glass | Easy | SSTI, Command Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 5 | Gunship | Easy | Prototype Pollution, AST Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 6 | Toxic | Easy | PHP Deserialization, Log Poisoning | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 7 | sanitize | Easy | NoSQL Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 8 | baby auth | Easy | Authentication Bypass | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 9 | LoveTok | Easy | PHP Code Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 10 | TimeKORP | Easy | PHP Time Injection, Command Injection | [Medium - Rahul](https://medium.com/@rahulhoysala07/hack-the-box-web-challenge-timekorp-writeup-e03cc2f08d70) |
+| 11 | KORP Terminal | Easy | SQL Injection, Hashcat | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 12 | Neonify | Easy | Ruby SSTI, Regex Bypass | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 13 | Slippy | Easy | Python Tar Slip, Path Traversal | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 14 | Full Stack Conf | Easy | Source Code Analysis | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 15 | CurlAsAService | Easy | SSRF, curl Exploitation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 16 | Wild Goose Hunt | Easy | NoSQL Injection, Regex Extraction | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 17 | E.Tree | Easy | XPath Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 18 | CandyVault | Easy | NoSQL Injection (MongoDB) | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 19 | SpookTastic | Easy | XSS, Bot Exploitation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 20 | Saturn | Easy | Path Traversal | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 21 | HTBank | Easy | Race Condition, Integer Overflow | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 22 | Watersnake | Easy | Java Deserialization, SnakeYAML | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 23 | Lazy Ballot | Easy | SQL Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 24 | emoji voting | Easy | SQL Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 25 | ProxyAsAService | Easy | SSRF, Proxy Bypass | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 26 | baby interdimensional internet | Easy | Python Code Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 27 | baby ninja jinja | Easy | Jinja2 SSTI | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 28 | baby CachedView | Easy | SSRF | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 29 | baby website rick | Easy | Source Code Analysis, Cookies | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 30 | baby todo or not todo | Easy | IDOR, API Abuse | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 31 | Intergalactic Post | Easy | SQL Injection (SQLite) | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 32 | BlinkerFluids | Easy | HTML Injection, RCE via PDF | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 33 | Juggling facts | Easy | PHP Type Juggling | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 34 | Spookifier | Easy | Jinja2/Mako SSTI | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 35 | Red Island | Easy | SSRF via Image URL | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 36 | Mutation Lab | Easy | CSS Injection, Session Forgery | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 37 | Amidst Us | Easy | Python Pickle Deserialization | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 38 | Diogenes' Rage | Easy | Race Condition, Coupon Abuse | [MadDevs](https://maddevs.io/writeups/hackthebox-diogenes-rage/) |
+| 39 | Weather App | Easy | SSRF, SQL Injection | [s-3ntinel](https://s-3ntinel.github.io/hackthebox/challenges/web/weather_app/weather_app.html) |
+| 40 | Insomnia | Medium | Authentication Bypass, Logic Flaw | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 41 | jscalc | Medium | JavaScript Sandbox Escape | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 42 | OnlyHacks | Medium | SQL Injection, IDOR | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 43 | Breaking Bank | Medium | JWT Exploitation, Race Condition | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 44 | wafwaf | Medium | WAF Bypass, SQL Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 45 | GhostlyTemplates | Medium | Go Template Injection, SSTI | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 46 | PumpkinSpice | Medium | SSTI, Python Template Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 47 | Spellbound Servants | Medium | Deserialization, PHP Object Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 48 | HauntMart | Medium | SSRF, Internal Service Access | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 49 | 0xBOverchunked | Medium | HTTP Chunked Encoding, SQLi WAF Bypass | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 50 | Percetron | Medium | ML Model Exploitation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 51 | Testimonial | Medium | gRPC Exploitation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 52 | Horror Feeds | Medium | SQL Injection, XSS | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 53 | baby nginxatsu | Medium | Nginx Misconfiguration, LFI | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 54 | Spiky Tamagotchi | Medium | SQL Injection, Session Hijack | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 55 | Kryptos Support | Medium | XSS, Cookie Stealing | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 56 | baby breaking grad | Medium | Prototype Pollution | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 57 | Orbital | Medium | SQL Injection, LFI | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 58 | Passman | Medium | GraphQL Exploitation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 59 | BatchCraft Potions | Medium | Batch Script Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 60 | baby WAFfles order | Medium | XXE Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 61 | Cursed Secret Party | Medium | Stored XSS, CSP Bypass | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 62 | baby BoneChewerCon | Medium | SSTI, Sandbox Escape | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 63 | RenderQuest | Medium | Go SSTI, Template Injection | [Medium - Tanish](https://medium.com/@tanish.saxena26/hackthebox-renderquest-cf6c493d7b83) |
+| 64 | Labyrinth Linguist | Medium | Apache Velocity SSTI, CVE-2020-13936 | [Medium - Rahul](https://medium.com/@rahulhoysala07/hack-the-box-web-challenge-labyrinth-linguist-a67d5005abe0) |
+| 65 | CDNio | Hard | CDN Bypass, Cache Poisoning | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 66 | NeoVault | Hard | Neo4j Injection, Cypher Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 67 | PDFy | Hard | PDF Generation SSRF | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 68 | AbuseHumanDB | Hard | XSS Chain, Bot Exploitation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 69 | ExpressionalRebel | Hard | Regex ReDoS, Expression Injection | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 70 | TrapTrack | Hard | Gopher SSRF, Redis Exploitation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 71 | Spybug | Hard | API Key Leak, Stored XSS | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 72 | Didactic Octo Paddles | Hard | JWT None Algorithm, SSTI | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 73 | The Magic Informer | Hard | SQL Injection, Prototype Pollution | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 74 | Letter Dispair | Hard | XSS, SSRF Chain | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
+| 75 | Userland City | Hard | Complex Multi-Stage Exploitation | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/web/) |
 
-| Challenge | Difficulty | Techniques | Key Takeaway |
-|-----------|-----------|------------|--------------|
-| [Trapped Source](trapped-source/) | Very Easy | JavaScript Analysis, Source Code Review | Client-side validation is not security |
-| [Gunship](gunship/) | Very Easy | Prototype Pollution, AST Injection | Node.js prototype pollution to RCE |
-| [Emdee Five for Life](emdee-five-for-life/) | Easy | Scripting, MD5, Automation | Race condition with time-based responses |
-| [FreeLancer](freelancer/) | Easy | SQL Injection, Union-Based | Classic UNION injection in login form |
-| [Templated](templated/) | Easy | SSTI, Jinja2 | Server-Side Template Injection in Flask |
-| [Toxic](toxic/) | Easy | PHP Deserialization, LFI | Insecure deserialization via cookie |
-| [Looking Glass](looking-glass/) | Easy | Command Injection | OS command injection through ping utility |
-| [Neonify](neonify/) | Easy | Ruby SSTI, ERB | Template injection in Ruby/ERB |
-| [Renderquest](renderquest/) | Easy | Go Template Injection | SSTI in Go templates |
-| [C.O.P.](cop/) | Easy | Python Pickle Deserialization | Insecure deserialization in Python |
-| [BlinkerFluids](blinkerfluids/) | Easy | Markdown XSS, SSRF | XSS through markdown rendering |
-| [Weather App](weather-app/) | Easy | SSRF, SQLi | Chaining SSRF with SQL injection |
-| [Juggling Facts](juggling-facts/) | Easy | PHP Type Juggling | PHP loose comparison bypass |
-| [Phonebook](phonebook/) | Easy | LDAP Injection | LDAP injection in login form |
-| [baby auth](baby-auth/) | Easy | JWT None Algorithm | JWT algorithm confusion attack |
-| [baby nginxatsu](baby-nginxatsu/) | Easy | Nginx Misconfiguration | Path traversal via nginx alias misconfiguration |
-| [Diogenes' Rage](diogenes-rage/) | Medium | Race Condition | Race condition in coupon redemption |
-| [Mutation Lab](mutation-lab/) | Medium | CSS Injection, SSRF | Exfiltrating data via CSS injection |
-| [Spookifier](spookifier/) | Medium | SSTI, Mako Templates | Server-Side Template Injection in Mako |
-| [Intergalactic Post](intergalactic-post/) | Medium | XSS, SQL Injection | Chained XSS with SQLi |
-| [HackBrawl](hackbrawl/) | Medium | GraphQL Injection | GraphQL introspection and injection |
-| [PerfectGift](perfectgift/) | Medium | Prototype Pollution, RCE | JS prototype pollution to command execution |
-| [ProxyAsAService](proxy-as-a-service/) | Medium | SSRF, URL Parser Differential | Exploiting URL parsing differences for SSRF |
-| [SatelliteHijack](satellite-hijack/) | Medium | WebSocket, Command Injection | Command injection through WebSocket messages |
-| [Magicom](magicom/) | Hard | Deserialization, PHP POP Chain | Complex PHP object injection chain |
-| [Checkpointbots](checkpointbots/) | Hard | XS-Leaks, CSS Injection | Cross-origin information leakage |
-| [CuteNews](cutenews/) | Hard | PHP RCE, Avatar Upload | File upload bypass to PHP execution |
-| [Breaking Grad](breaking-grad/) | Hard | NodeJS Prototype Pollution | Deep prototype pollution in Node.js |
+---
 
-## Techniques Covered
-
-### Server-Side
-- SQL Injection (Union, Blind, Error-based)
-- Server-Side Template Injection (Jinja2, Twig, Mako, ERB, Go)
-- Server-Side Request Forgery (SSRF)
-- Command Injection
-- Deserialization (PHP, Python, Java, Node.js)
-- LDAP Injection
-- GraphQL Exploitation
-
-### Client-Side
-- Cross-Site Scripting (Reflected, Stored, DOM)
-- CSS Injection
-- Prototype Pollution
-- JWT Attacks (None algorithm, Key confusion)
-
-### Logic
-- Race Conditions
-- Type Juggling
-- Authentication Bypass
-- Access Control Issues

@@ -1,3 +1,12 @@
+---
+layout: default
+title: Easy Machines
+parent: Machines
+nav_order: 1
+description: "120+ Easy HTB machine writeups with walkthroughs"
+permalink: /machines/easy/
+---
+
 # HackTheBox Easy Machines - Comprehensive Reference
 
 > Complete catalog of retired HTB Easy machines with OS, key vulnerability, attack path summary, and quality writeup links.

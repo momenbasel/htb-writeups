@@ -1,55 +1,25 @@
-# Blockchain Challenges
+---
+layout: default
+title: "Blockchain"
+parent: Challenges
+nav_order: 11
+permalink: /challenges/blockchain/
+---
 
-Writeups for HTB Blockchain/Smart Contract challenges.
+## Blockchain Challenges
 
-## Challenge Index
+| # | Challenge | Difficulty | Key Techniques | Writeup |
+|---|-----------|-----------|----------------|---------|
+| 1 | Survival of the Fittest | Very Easy | Smart Contract Interaction, cast | [InfoSec Writeups](https://infosecwriteups.com/hackthebox-survival-of-the-fittest-blockchain-challenge-writeup-e7302c787d20) |
+| 2 | Russian Roulette | Very Easy | Block Hash Manipulation | [Forbytten](https://forbytten.gitlab.io/blog/htb-cyber-apocalypse-writeups-2024/russian-roulette/) |
+| 3 | Lucky Faucet | Easy | Integer Overflow, Solidity | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/blockchain/) |
+| 4 | Funds Secured | Easy | Incorrect Parameter Verification | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/blockchain/) |
+| 5 | Magic Vault | Easy | Private Storage Read, Block Mechanics | [Medium - 0x-professor](https://0x-professor.medium.com/magic-vault-hackthebox-blockchain-challenge-writeup-078f6c1ed87d) |
+| 6 | Distract and Destroy | Easy | Smart Contract Logic Exploit | [GitHub - KanakSasak](https://github.com/KanakSasak/HTB-Blockchain) |
+| 7 | Confidentiality | Medium | ERC-721, ECDSA Signature Malleability | [7Rocky](https://7rocky.github.io/en/ctf/htb-challenges/blockchain/) |
+| 8 | Honor Among Thieves | Medium | Multi-Contract Exploitation | [GitHub - KanakSasak](https://github.com/KanakSasak/HTB-Blockchain) |
+| 9 | Art of Deception | Medium | Smart Contract Deception | [Medium - Nikhil](https://medium.com/@nikhilmemane09/htb-cyber-apocalypse-2023-owning-smart-contracts-art-of-deception-f3348897d5c5) |
+| 10 | University CTF 2024 Blockchain | Various | Multiple Smart Contract Challenges | [Medium - Nafiz](https://medium.com/@muhammadnafiz2017/hack-the-box-university-ctf-2024-blockchain-challenges-writeup-1787e97f0fff) |
 
-| Challenge | Difficulty | Techniques | Key Takeaway |
-|-----------|-----------|------------|--------------|
-| [Survival of the Richest](survival-of-richest/) | Very Easy | Solidity, Send/Transfer | Basic Ethereum transaction |
-| [Distract and Destroy](distract-destroy/) | Easy | Reentrancy, Fallback | Classic reentrancy attack |
-| [Token Bank](token-bank/) | Easy | ERC20, Transfer Logic | Token contract exploitation |
-| [Unknown](unknown/) | Easy | Bytecode Analysis | Reading EVM storage slots |
-| [ShootingTheRange](shooting-the-range/) | Medium | Integer Overflow, SafeMath | Integer overflow in Solidity |
-| [HoneyPot](honeypot/) | Medium | Hidden Functions, Proxy | Smart contract honeypot analysis |
-| [DeFi Oracle](defi-oracle/) | Hard | Price Oracle Manipulation | Flash loan + oracle attack |
-| [CPAMM](cpamm/) | Hard | AMM, Liquidity Pool | Automated market maker exploitation |
+---
 
-## Key Concepts
-
-### Common Smart Contract Vulnerabilities
-| Vulnerability | Description | Example |
-|--------------|-------------|---------|
-| Reentrancy | External call before state update | The DAO hack |
-| Integer Overflow/Underflow | Arithmetic without SafeMath | Old ERC20 tokens |
-| Access Control | Missing function modifiers | Unprotected admin functions |
-| Front-running | Transaction ordering manipulation | DEX sandwich attacks |
-| Oracle Manipulation | Price feed manipulation | Flash loan attacks |
-| Delegatecall | Context-preserving external call | Proxy pattern bugs |
-| Self-destruct | Forced ETH transfer | Balance check bypass |
-
-### Setup
-```bash
-# Foundry (recommended)
-curl -L https://foundry.paradigm.xyz | bash
-foundryup
-
-# Interact with contract
-cast call <contract> "functionName()" --rpc-url http://challenge:8545
-cast send <contract> "functionName(uint256)" 123 --rpc-url http://challenge:8545 --private-key <key>
-
-# Deploy exploit contract
-forge create src/Exploit.sol:Exploit --rpc-url http://challenge:8545 --private-key <key>
-```
-
-## Tools
-
-| Tool | Purpose |
-|------|---------|
-| Foundry (forge/cast) | Solidity development and interaction |
-| Hardhat | JavaScript-based development environment |
-| Remix IDE | Browser-based Solidity IDE |
-| Etherscan | Block explorer |
-| Slither | Static analysis for Solidity |
-| Mythril | Symbolic execution for smart contracts |
-| Echidna | Fuzzing for smart contracts |
