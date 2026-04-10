@@ -32,23 +32,23 @@ permalink: /machines/easy/
 | # | Machine | OS | Key Vulnerability / Technique | Attack Path Summary | Writeup |
 |---|---------|-----|-------------------------------|---------------------|---------|
 | 1 | **Lame** | Linux | Samba 3.0.20 RCE (CVE-2007-2447) | Exploit Samba `username map script` command injection to get root shell directly | [0xdf](https://0xdf.gitlab.io/2020/04/07/htb-lame.html) |
-| 2 | **Legacy** | Windows | MS08-067 (NetAPI) | Exploit SMB vulnerability in Windows XP for SYSTEM shell | [0xdf](https://0xdf.gitlab.io/2019/02/09/htb-legacy.html) |
+| 2 | **Legacy** | Windows | MS08-067 (NetAPI) | Exploit SMB vulnerability in Windows XP for SYSTEM shell | [0xdf](https://0xdf.gitlab.io/2019/02/21/htb-legacy.html) |
 | 3 | **Blue** | Windows | MS17-010 EternalBlue | Exploit SMB EternalBlue vulnerability for SYSTEM shell on Windows 7 | [0xdf](https://0xdf.gitlab.io/2021/05/11/htb-blue.html) |
 | 4 | **Devel** | Windows | FTP Anonymous Upload + IIS RCE | Upload ASPX webshell via anonymous FTP to IIS webroot, kernel exploit for SYSTEM | [0xdf](https://0xdf.gitlab.io/2019/03/05/htb-devel.html) |
 | 5 | **Beep** | Linux | Elastix LFI / Multiple Vectors | Multiple attack paths: LFI to read credentials, Shellshock, or RCE via FreePBX | [0xdf](https://0xdf.gitlab.io/2021/02/23/htb-beep.html) |
 | 6 | **Optimum** | Windows | HFS 2.3 RCE (CVE-2014-6287) | Exploit HttpFileServer RCE for user shell, MS16-032 for SYSTEM | [0xdf](https://0xdf.gitlab.io/2021/03/17/htb-optimum.html) |
 | 7 | **Bastard** | Windows | Drupal 7 RCE (Drupalgeddon) | Exploit Drupal RCE for webshell, kernel exploit (MS15-051) for SYSTEM | [0xdf](https://0xdf.gitlab.io/2019/03/12/htb-bastard.html) |
-| 8 | **Grandpa** | Windows | IIS 6.0 WebDAV RCE (CVE-2017-7269) | Exploit IIS WebDAV buffer overflow, token impersonation (churrasco) for SYSTEM | [0xdf](https://0xdf.gitlab.io/2019/03/06/htb-grandpa.html) |
+| 8 | **Grandpa** | Windows | IIS 6.0 WebDAV RCE (CVE-2017-7269) | Exploit IIS WebDAV buffer overflow, token impersonation (churrasco) for SYSTEM | [0xdf](https://0xdf.gitlab.io/2020/05/28/htb-grandpa.html) |
 | 9 | **Granny** | Windows | IIS 6.0 WebDAV PUT Upload | Upload webshell via WebDAV PUT method, token impersonation for SYSTEM | [0xdf](https://0xdf.gitlab.io/2019/03/06/htb-granny.html) |
 | 10 | **Arctic** | Windows | Adobe ColdFusion 8 RCE | Exploit ColdFusion directory traversal + RCE, kernel exploit for SYSTEM | [0xdf](https://0xdf.gitlab.io/2020/05/19/htb-arctic.html) |
 | 11 | **Shocker** | Linux | Shellshock (CVE-2014-6271) | Exploit Shellshock in CGI script for user shell, sudo perl for root | [0xdf](https://0xdf.gitlab.io/2021/05/25/htb-shocker.html) |
 | 12 | **Nibbles** | Linux | NibbleBlog Arbitrary File Upload | Guess admin credentials on NibbleBlog, upload PHP shell via My Image plugin, sudo for root | [0xdf](https://0xdf.gitlab.io/2018/06/30/htb-nibbles.html) |
 | 13 | **Bashed** | Linux | PHP Webshell + Cron Abuse | Find phpbash webshell on dev server, pivot to scriptmanager, cron job runs Python as root | [0xdf](https://0xdf.gitlab.io/2018/04/29/htb-bashed.html) |
-| 14 | **Mirai** | Linux | Default Raspberry Pi Credentials | Access Pi-hole admin panel, SSH with default pi:raspberry credentials, recover root flag from USB | [0xdf](https://0xdf.gitlab.io/2021/05/18/htb-mirai.html) |
-| 15 | **Sense** | FreeBSD | pfSense RCE (CVE-2014-4688) | Find credentials via directory brute-force, exploit pfSense command injection for root | [0xdf](https://0xdf.gitlab.io/2021/03/08/htb-sense.html) |
-| 16 | **Blocky** | Linux | WordPress + Exposed Java Creds | Decompile Minecraft plugin JAR to find DB creds, password reuse for SSH, sudo su for root | [0xdf](https://0xdf.gitlab.io/2021/06/20/htb-blocky.html) |
+| 14 | **Mirai** | Linux | Default Raspberry Pi Credentials | Access Pi-hole admin panel, SSH with default pi:raspberry credentials, recover root flag from USB | [0xdf](https://0xdf.gitlab.io/2022/05/18/htb-mirai.html) |
+| 15 | **Sense** | FreeBSD | pfSense RCE (CVE-2014-4688) | Find credentials via directory brute-force, exploit pfSense command injection for root | [0xdf](https://0xdf.gitlab.io/2021/03/11/htb-sense.html) |
+| 16 | **Blocky** | Linux | WordPress + Exposed Java Creds | Decompile Minecraft plugin JAR to find DB creds, password reuse for SSH, sudo su for root | [0xdf](https://0xdf.gitlab.io/2020/06/30/htb-blocky.html) |
 | 17 | **Cronos** | Linux | DNS Zone Transfer + SQLi + Cron | Zone transfer reveals admin subdomain, SQLi bypass login, command injection, cron privesc | [rana-khalil](https://rana-khalil.gitbook.io/hack-the-box-oscp-preparation/linux-boxes/cronos-writeup-w-o-metasploit) |
-| 18 | **Bank** | Linux | File Upload Bypass + SUID | Upload PHP reverse shell (bypass extension filter), find SUID binary for root | [0xdf](https://0xdf.gitlab.io/2021/06/14/htb-bank.html) |
+| 18 | **Bank** | Linux | File Upload Bypass + SUID | Upload PHP reverse shell (bypass extension filter), find SUID binary for root | [0xdf](https://0xdf.gitlab.io/2020/07/07/htb-bank.html) |
 | 19 | **Sunday** | Solaris | Finger Enumeration + Shadow File | Enumerate users via finger service, brute-force SSH, read shadow file, crack root hash | [0xdf](https://0xdf.gitlab.io/2018/09/29/htb-sunday.html) |
 | 20 | **Valentine** | Linux | Heartbleed (CVE-2014-0160) | Exploit Heartbleed to leak SSH key passphrase from memory, tmux session hijack for root | [0xdf](https://0xdf.gitlab.io/2018/07/28/htb-valentine.html) |
 | 21 | **Irked** | Linux | UnrealIRCd Backdoor + Stego | Exploit UnrealIRCd 3.2.8.1 backdoor for shell, extract password from steganography image for root | [0xdf](https://0xdf.gitlab.io/2019/04/27/htb-irked.html) |
@@ -57,8 +57,8 @@ permalink: /machines/easy/
 | 24 | **Active** | Windows | GPP Password + Kerberoasting | Decrypt Group Policy Preferences password from SMB, Kerberoast Administrator SPN | [0xdf](https://0xdf.gitlab.io/2018/12/08/htb-active.html) |
 | 25 | **Access** | Windows | MDB Credentials + Stored Creds | Extract creds from Access DB on FTP, decrypt PST for password, runas with stored credentials | [0xdf](https://0xdf.gitlab.io/2019/03/02/htb-access.html) |
 | 26 | **Bounty** | Windows | IIS Short Name + web.config Upload | Exploit IIS short filename disclosure, upload web.config with ASP code, JuicyPotato for SYSTEM | [0xdf](https://0xdf.gitlab.io/2018/10/27/htb-bounty.html) |
-| 27 | **Curling** | Linux | Joomla + Hex Decode + Cron | Find base64 password in page source for Joomla admin, edit template for shell, cron privesc | [0xdf](https://0xdf.gitlab.io/2019/05/18/htb-curling.html) |
-| 28 | **FriendZone** | Linux | DNS Zone Transfer + LFI + Cron | Zone transfer reveals vhosts, find creds in SMB, LFI to RCE via uploaded PHP, writable cron module for root | [0xdf](https://0xdf.gitlab.io/2019/10/05/htb-friendzone.html) |
+| 27 | **Curling** | Linux | Joomla + Hex Decode + Cron | Find base64 password in page source for Joomla admin, edit template for shell, cron privesc | [0xdf](https://0xdf.gitlab.io/2019/03/30/htb-curling.html) |
+| 28 | **FriendZone** | Linux | DNS Zone Transfer + LFI + Cron | Zone transfer reveals vhosts, find creds in SMB, LFI to RCE via uploaded PHP, writable cron module for root | [0xdf](https://0xdf.gitlab.io/2019/07/13/htb-friendzone.html) |
 | 29 | **SwagShop** | Linux | Magento RCE (CVE-2015-1397) | Create admin via SQLi, exploit Magento Froghopper RCE, sudo vi for root | [0xdf](https://0xdf.gitlab.io/2019/09/28/htb-swagshop.html) |
 | 30 | **Bastion** | Windows | VHD Mount + SAM Dump | Access SMB backup share, mount VHD file, dump SAM hashes, crack mRemoteNG config for admin | [0xdf](https://0xdf.gitlab.io/2019/09/07/htb-bastion.html) |
 
@@ -73,7 +73,7 @@ permalink: /machines/easy/
 | 33 | **Writeup** | Linux | CMS Made Simple SQLi + PATH Hijack | Exploit CMS Made Simple SQLi (CVE-2019-9053) for creds, SSH, PATH hijack via staff group for root | [0xdf](https://0xdf.gitlab.io/2019/10/12/htb-writeup.html) |
 | 34 | **Luke** | Linux | JSON API + Multiple Creds | Enumerate FTP, discover Ajenti panel, chain API auth tokens to extract admin creds | [0xdf](https://0xdf.gitlab.io/2019/09/14/htb-luke.html) |
 | 35 | **Postman** | Linux | Redis Unauthorized + Webmin RCE | Write SSH key via unauthenticated Redis, crack encrypted SSH key, Webmin RCE (CVE-2019-12840) as root | [0xdf](https://0xdf.gitlab.io/2020/03/14/htb-postman.html) |
-| 36 | **Traverxec** | Linux | Nostromo RCE + Journalctl Privesc | Exploit Nostromo web server RCE (CVE-2019-16278) for shell, find SSH key in htdocs, sudo journalctl pager escape for root | [0xdf](https://0xdf.gitlab.io/2020/04/18/htb-traverxec.html) |
+| 36 | **Traverxec** | Linux | Nostromo RCE + Journalctl Privesc | Exploit Nostromo web server RCE (CVE-2019-16278) for shell, find SSH key in htdocs, sudo journalctl pager escape for root | [0xdf](https://0xdf.gitlab.io/2020/04/11/htb-traverxec.html) |
 | 37 | **OpenAdmin** | Linux | OpenNetAdmin RCE + Sudo Nano | Exploit OpenNetAdmin RCE, pivot via password reuse, read SSH key via internal Apache, sudo nano for root | [0xdf](https://0xdf.gitlab.io/2020/05/02/htb-openadmin.html) |
 | 38 | **Traceback** | Linux | PHP Webshell + Lua Privesc | Find existing webshell from previous attacker, pivot users via Lua binary (sudo luvit), motd write for root | [0xdf](https://0xdf.gitlab.io/2020/08/15/htb-traceback.html) |
 | 39 | **Admirer** | Linux | Adminer 4.6.2 SSRF + PATH Hijack | Discover credentials via directory traversal, exploit Adminer SSRF to read config, PYTHONPATH hijack for root | [0xdf](https://0xdf.gitlab.io/2020/09/26/htb-admirer.html) |
@@ -102,15 +102,15 @@ permalink: /machines/easy/
 | 55 | **Love** | Windows | SSRF + AlwaysInstallElevated | SSRF via file scanner reads internal admin page with creds, exploit Voting System upload, AlwaysInstallElevated for SYSTEM | [0xdf](https://0xdf.gitlab.io/2021/08/07/htb-love.html) |
 | 56 | **Previse** | Linux | OS Command Injection + PATH Hijack | Create account via request manipulation, find exec() command injection, crack MySQL hash, PATH hijack in SUID script for root | [0xdf](https://0xdf.gitlab.io/2022/01/08/htb-previse.html) |
 | 57 | **Horizontall** | Linux | Strapi RCE Chain | Discover Strapi API via JS analysis, chain CVE-2019-18818 (password reset) + CVE-2019-19609 (RCE), Laravel debug RCE via port forward for root | [0xdf](https://0xdf.gitlab.io/2022/02/05/htb-horizontall.html) |
-| 58 | **Validation** | Linux | SQL Injection to RCE + Docker Root | Second-order SQLi via country parameter writes PHP webshell, find config creds, su root (password reuse) | [0xdf](https://0xdf.gitlab.io/2022/02/12/htb-validation.html) |
+| 58 | **Validation** | Linux | SQL Injection to RCE + Docker Root | Second-order SQLi via country parameter writes PHP webshell, find config creds, su root (password reuse) | [0xdf](https://0xdf.gitlab.io/2021/09/14/htb-validation.html) |
 | 59 | **Driver** | Windows | SCF File Attack + PrintNightmare | Upload SCF file to printer share capturing NTLM hash, crack hash for WinRM, PrintNightmare (CVE-2021-1675) for SYSTEM | [0xdf](https://0xdf.gitlab.io/2022/02/26/htb-driver.html) |
-| 60 | **Return** | Windows | Printer LDAP Config + Server Operators | Redirect printer LDAP config to capture creds, WinRM access, abuse Server Operators group service control for SYSTEM | [0xdf](https://0xdf.gitlab.io/2022/03/12/htb-return.html) |
-| 61 | **Antique** | Linux | SNMP String Leak + CUPS RCE | Extract printer password via SNMP OID walk, telnet access, CUPS (CVE-2012-5519) file read as root | [0xdf](https://0xdf.gitlab.io/2022/03/19/htb-antique.html) |
+| 60 | **Return** | Windows | Printer LDAP Config + Server Operators | Redirect printer LDAP config to capture creds, WinRM access, abuse Server Operators group service control for SYSTEM | [0xdf](https://0xdf.gitlab.io/2022/05/05/htb-return.html) |
+| 61 | **Antique** | Linux | SNMP String Leak + CUPS RCE | Extract printer password via SNMP OID walk, telnet access, CUPS (CVE-2012-5519) file read as root | [0xdf](https://0xdf.gitlab.io/2022/05/03/htb-antique.html) |
 | 62 | **Backdoor** | Linux | WordPress Plugin LFI + Screen SUID | Exploit eBook Download plugin LFI, enumerate /proc to find gdbserver, exploit gdbserver for shell, SUID screen for root | [0xdf](https://0xdf.gitlab.io/2022/04/23/htb-backdoor.html) |
-| 63 | **Nunchucks** | Linux | SSTI in Express.js + AppArmor Bypass | Discover subdomain with Nunjucks SSTI, exploit for shell, bypass AppArmor via Perl shebang bug for root | [0xdf](https://0xdf.gitlab.io/2022/05/07/htb-nunchucks.html) |
+| 63 | **Nunchucks** | Linux | SSTI in Express.js + AppArmor Bypass | Discover subdomain with Nunjucks SSTI, exploit for shell, bypass AppArmor via Perl shebang bug for root | [0xdf](https://0xdf.gitlab.io/2021/11/02/htb-nunchucks.html) |
 | 64 | **Paper** | Linux | WordPress Draft Leak + Rocket.Chat Bot | Exploit WordPress draft content disclosure, find Rocket.Chat registration URL, abuse bot file read, Polkit CVE-2021-3560 for root | [0xdf](https://0xdf.gitlab.io/2022/06/18/htb-paper.html) |
 | 65 | **Timelapse** | Windows | PFX Cert Cracking + LAPS | Crack PFX from SMB share, extract cert/key for WinRM, read LAPS password from AD for Administrator | [0xdf](https://0xdf.gitlab.io/2022/08/20/htb-timelapse.html) |
-| 66 | **Late** | Linux | SSTI via OCR + SUID Script | Upload image with SSTI payload to Flask-based OCR app, exploit Jinja2 SSTI for shell, write to SUID append script for root | [0xdf](https://0xdf.gitlab.io/2022/08/27/htb-late.html) |
+| 66 | **Late** | Linux | SSTI via OCR + SUID Script | Upload image with SSTI payload to Flask-based OCR app, exploit Jinja2 SSTI for shell, write to SUID append script for root | [0xdf](https://0xdf.gitlab.io/2022/07/30/htb-late.html) |
 
 ---
 
@@ -119,16 +119,16 @@ permalink: /machines/easy/
 | # | Machine | OS | Key Vulnerability / Technique | Attack Path Summary | Writeup |
 |---|---------|-----|-------------------------------|---------------------|---------|
 | 67 | **Pandora** | Linux | SNMP Credential Leak + Pandora FMS RCE | Enumerate SNMP for cleartext creds, port-forward Pandora FMS, chain SQLi + RCE, SUID binary PATH hijack for root | [0xdf](https://0xdf.gitlab.io/2022/05/21/htb-pandora.html) |
-| 68 | **GoodGames** | Linux | SQLi + SSTI + Docker Escape | SQL injection in login to dump admin hash, SSTI in Flask dashboard for shell in container, mount host filesystem for root | [0xdf](https://0xdf.gitlab.io/2022/06/11/htb-goodgames.html) |
-| 69 | **NodeBlog** | Linux | NoSQL Injection + XXE + Deserialization | NoSQL injection to bypass login, XXE in blog XML parsing, node-serialize deserialization RCE, MongoDB creds for root | [0xdf](https://0xdf.gitlab.io/2022/05/30/htb-nodeblog.html) |
-| 70 | **Trick** | Linux | DNS Enumeration + SQLi + LFI to RCE | DNS zone transfer reveals subdomains, SQLi in payroll app for file read, find vhost with LFI, include mail with PHP code for RCE, fail2ban privesc | [0xdf](https://0xdf.gitlab.io/2022/10/22/htb-trick.html) |
-| 71 | **RedPanda** | Linux | Spring Boot SSTI + XXE Cron | SSTI in Java Spring Boot search for shell, exploit XXE in log parser cron job to read root SSH key | [0xdf](https://0xdf.gitlab.io/2022/11/19/htb-redpanda.html) |
+| 68 | **GoodGames** | Linux | SQLi + SSTI + Docker Escape | SQL injection in login to dump admin hash, SSTI in Flask dashboard for shell in container, mount host filesystem for root | [0xdf](https://0xdf.gitlab.io/2022/02/23/htb-goodgames.html) |
+| 69 | **NodeBlog** | Linux | NoSQL Injection + XXE + Deserialization | NoSQL injection to bypass login, XXE in blog XML parsing, node-serialize deserialization RCE, MongoDB creds for root | [0xdf](https://0xdf.gitlab.io/2022/01/10/htb-nodeblog.html) |
+| 70 | **Trick** | Linux | DNS Enumeration + SQLi + LFI to RCE | DNS zone transfer reveals subdomains, SQLi in payroll app for file read, find vhost with LFI, include mail with PHP code for RCE, fail2ban privesc | [0xdf](https://0xdf.gitlab.io/2022/10/29/htb-trick.html) |
+| 71 | **RedPanda** | Linux | Spring Boot SSTI + XXE Cron | SSTI in Java Spring Boot search for shell, exploit XXE in log parser cron job to read root SSH key | [0xdf](https://0xdf.gitlab.io/2022/11/26/htb-redpanda.html) |
 | 72 | **Shoppy** | Linux | NoSQL Injection + Docker Group | NoSQL injection in login and search, crack user hash from Mattermost, docker group container escape for root | [0xdf](https://0xdf.gitlab.io/2023/01/14/htb-shoppy.html) |
 | 73 | **Photobomb** | Linux | Exposed Creds + Command Injection + PATH | Find credentials in JavaScript file, command injection in image manipulation, sudo script with relative PATH for root | [0xdf](https://0xdf.gitlab.io/2023/02/11/htb-photobomb.html) |
-| 74 | **Precious** | Linux | pdfkit RCE + Ruby Deserialization | Exploit pdfkit CVE-2022-25765 command injection for shell, find creds in .bundle config, insecure Ruby YAML deserialization for root | [0xdf](https://0xdf.gitlab.io/2023/05/27/htb-precious.html) |
-| 75 | **MetaTwo** | Linux | WordPress BookingPress SQLi + XXE | SQLi in WordPress BookingPress plugin (CVE-2022-0739), XXE in WordPress media upload (CVE-2021-29447), crack Passpie PGP for root | [0xdf](https://0xdf.gitlab.io/2023/04/22/htb-metatwo.html) |
-| 76 | **Squashed** | Linux | NFS no_root_squash + X11 Screenshot | Mount NFS share, fake UID to write webshell for user, .Xauthority token to screenshot X11 for root password | [0xdf](https://0xdf.gitlab.io/2023/04/01/htb-squashed.html) |
-| 77 | **Stocker** | Linux | NoSQL Injection + PDF HTML Injection | NoSQL injection to bypass Express.js login, HTML injection in PDF generator reads files via iframe, path wildcard sudo for root | [0xdf](https://0xdf.gitlab.io/2023/06/17/htb-stocker.html) |
+| 74 | **Precious** | Linux | pdfkit RCE + Ruby Deserialization | Exploit pdfkit CVE-2022-25765 command injection for shell, find creds in .bundle config, insecure Ruby YAML deserialization for root | [0xdf](https://0xdf.gitlab.io/2023/05/20/htb-precious.html) |
+| 75 | **MetaTwo** | Linux | WordPress BookingPress SQLi + XXE | SQLi in WordPress BookingPress plugin (CVE-2022-0739), XXE in WordPress media upload (CVE-2021-29447), crack Passpie PGP for root | [0xdf](https://0xdf.gitlab.io/2023/04/29/htb-metatwo.html) |
+| 76 | **Squashed** | Linux | NFS no_root_squash + X11 Screenshot | Mount NFS share, fake UID to write webshell for user, .Xauthority token to screenshot X11 for root password | [0xdf](https://0xdf.gitlab.io/2022/11/21/htb-squashed.html) |
+| 77 | **Stocker** | Linux | NoSQL Injection + PDF HTML Injection | NoSQL injection to bypass Express.js login, HTML injection in PDF generator reads files via iframe, path wildcard sudo for root | [0xdf](https://0xdf.gitlab.io/2023/06/24/htb-stocker.html) |
 | 78 | **Soccer** | Linux | Default Creds + WebSocket SQLi + doas | Upload webshell via Tiny File Manager default creds, blind SQLi over WebSocket, doas privesc for root | [0xdf](https://0xdf.gitlab.io/2023/06/10/htb-soccer.html) |
 | 79 | **Support** | Windows | LDAP + .NET Binary Analysis | Analyze .NET binary to extract LDAP creds, enumerate AD users/shares, abuse GenericAll on DC for Kerberos RBCD attack | [0xdf](https://0xdf.gitlab.io/2022/12/17/htb-support.html) |
 
@@ -138,10 +138,10 @@ permalink: /machines/easy/
 
 | # | Machine | OS | Key Vulnerability / Technique | Attack Path Summary | Writeup |
 |---|---------|-----|-------------------------------|---------------------|---------|
-| 80 | **PC** | Linux | gRPC Enumeration + SQLi + pyLoad RCE | Enumerate gRPC service, SQL injection in app, find creds, exploit pyLoad (CVE-2023-0297) for root | [0xdf](https://0xdf.gitlab.io/2023/09/16/htb-pc.html) |
+| 80 | **PC** | Linux | gRPC Enumeration + SQLi + pyLoad RCE | Enumerate gRPC service, SQL injection in app, find creds, exploit pyLoad (CVE-2023-0297) for root | [0xdf](https://0xdf.gitlab.io/2023/10/07/htb-pc.html) |
 | 81 | **Busqueda** | Linux | Searchor Code Injection + Git Creds | Exploit eval() code injection in Searchor Python library, find creds in .git config, relative PATH sudo abuse for root | [0xdf](https://0xdf.gitlab.io/2023/08/12/htb-busqueda.html) |
 | 82 | **Pilgrimage** | Linux | ImageMagick LFI + Binwalk RCE | Exploit ImageMagick (CVE-2022-44268) to read files, extract SQLite DB creds, Binwalk CVE-2022-4510 RCE for root | [0xdf](https://0xdf.gitlab.io/2023/11/25/htb-pilgrimage.html) |
-| 83 | **Topology** | Linux | LaTeX Injection + gnuplot Privesc | Exploit LaTeX equation generator for file read via \input, find .htpasswd, crack for SSH, gnuplot cron SUID for root | [0xdf](https://0xdf.gitlab.io/2023/11/11/htb-topology.html) |
+| 83 | **Topology** | Linux | LaTeX Injection + gnuplot Privesc | Exploit LaTeX equation generator for file read via \input, find .htpasswd, crack for SSH, gnuplot cron SUID for root | [0xdf](https://0xdf.gitlab.io/2023/11/04/htb-topology.html) |
 | 84 | **MonitorsTwo** | Linux | Cacti RCE + Docker Escape + SUID | Exploit Cacti (CVE-2022-46169) for shell in container, find MySQL creds, capsh SUID in container, CVE-2021-41091 Docker escape for root | [0xdf](https://0xdf.gitlab.io/2023/09/02/htb-monitorstwo.html) |
 | 85 | **Sau** | Linux | SSRF + Maltrail RCE | Exploit request-baskets SSRF (CVE-2023-27163) to access internal Maltrail, OS command injection (CVE-2023-27163) for shell, sudo systemctl for root | [0xdf](https://0xdf.gitlab.io/2024/01/06/htb-sau.html) |
 | 86 | **TwoMillion** | Linux | API IDOR + Command Injection + Kernel CVE | Reverse invite code API, register account, IDOR to make admin, command injection in VPN generate, OverlayFS CVE-2023-0386 for root | [0xdf](https://0xdf.gitlab.io/2023/06/07/htb-twomillion.html) |

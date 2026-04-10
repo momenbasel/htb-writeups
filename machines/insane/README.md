@@ -17,7 +17,7 @@ permalink: /machines/insane/
 
 | # | Machine | OS | Key Techniques | One-Line Summary | Writeup Links |
 |---|---------|----|----|------|------|
-| 1 | **Brainfuck** | Linux | WordPress plugin exploit, Vigenere cipher, LXD privesc | Chain WP auth bypass with crypto analysis and container group abuse for root | [0xdf](https://0xdf.gitlab.io/2022/06/01/htb-brainfuck.html), [Medium](https://sparshjazz.medium.com/hackthebox-brainfuck-difficulty-insane-53f0fe650f5b) |
+| 1 | **Brainfuck** | Linux | WordPress plugin exploit, Vigenere cipher, LXD privesc | Chain WP auth bypass with crypto analysis and container group abuse for root | [0xdf](https://0xdf.gitlab.io/2022/05/16/htb-brainfuck.html), [Medium](https://sparshjazz.medium.com/hackthebox-brainfuck-difficulty-insane-53f0fe650f5b) |
 | 2 | **Ariekei** | Linux | Shellshock, ImageTragick, Docker pivoting | Exploit two famous CVEs through Docker container layers for multi-hop access | [0xdf](https://0xdf.gitlab.io/2022/04/20/htb-ariekei.html), [Medium](https://medium.com/@gabriel.pirjolescu/hack-the-box-ariekei-write-up-cd8f261cd2ca) |
 | 3 | **Jail** | Linux | NFS, custom binary exploit, rvim escape | Escape multiple sandbox environments with buffer overflow and NFS share abuse | [HTB](https://www.hackthebox.com/machines/jail) |
 | 4 | **Nightmare** | Linux | Second-order SQLi, exploit modification | Register SQLi-laden username then trigger on login for indirect injection | [HackingArticles](https://www.hackingarticles.in/hack-the-box-nightmare-walkthrough/) |
