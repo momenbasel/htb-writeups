@@ -150,7 +150,7 @@ permalink: /machines/easy/
 | 89 | **Analytics** | Linux | Metabase Pre-Auth RCE + Docker Escape | Exploit Metabase CVE-2023-38646 pre-auth RCE for container shell, env variables reveal creds, OverlayFS CVE-2023-2640 for root on host | [0xdf](https://0xdf.gitlab.io/2024/03/23/htb-analytics.html) |
 | 90 | **Devvortex** | Linux | Joomla Information Disclosure + RCE | Exploit Joomla CVE-2023-23752 to leak DB creds, access admin panel, template RCE for shell, apport-cli (CVE-2023-1326) for root | [dev.to](https://dev.to/mrtnsgs/hackthebox-writeup-devvortex-retired-1d42) |
 | 91 | **Codify** | Linux | vm2 Sandbox Escape + Bcrypt Bug | Exploit vm2 CVE-2023-32314 sandbox escape for RCE, find SQLite DB with bcrypt hash, exploit bcrypt comparison bug in bash for root | [0xdf](https://0xdf.gitlab.io/2024/04/06/htb-codify.html) |
-| 92 | **Broker** | Linux | ActiveMQ RCE + Nginx Sudo | Exploit Apache ActiveMQ CVE-2023-46604 for shell, sudo nginx config to write root SSH key | [0xdf](https://0xdf.gitlab.io/2024/02/17/htb-broker.html) |
+| 92 | **Broker** | Linux | ActiveMQ RCE + Nginx Sudo | Exploit Apache ActiveMQ CVE-2023-46604 for shell, sudo nginx config to write root SSH key | [0xdf](https://0xdf.gitlab.io/2023/11/09/htb-broker.html) |
 | 93 | **Bizness** | Linux | Apache OFBiz Pre-Auth RCE | Exploit Apache OFBiz CVE-2023-49070 for shell, find hashed admin password in Derby DB, crack for root | [Medium](https://medium.com/@kennethalvin596/bizness-writeup-hackthebox-0158c1ceeac2) |
 
 ---
