@@ -1,6 +1,6 @@
-# Hack The Box Writeups
+# Hack The Box Writeups - The Ultimate HTB Resource
 
-> A curated, community-driven collection of Hack The Box writeups covering machines, challenges, ProLabs, Sherlocks, CTF events, and more - organized by category, difficulty, and technique.
+> The most comprehensive collection of **Hack The Box writeups**, **walkthroughs**, and **cheatsheets** on GitHub. 500+ machines, 400+ challenges, ProLabs, Sherlocks (DFIR), CTF events, penetration testing methodology, and OSCP/CPTS certification prep - all in one place.
 
 ```
   ___ ___  ___________    __      __         .__  __                                  
@@ -11,11 +11,14 @@
        \/                       \/                         \/      |__|       \/      
 ```
 
+[![Awesome](https://awesome.re/badge-flat2.svg)](https://awesome.re)
 [![Stars](https://img.shields.io/github/stars/momenbasel/htb-writeups?style=for-the-badge&color=yellow)](https://github.com/momenbasel/htb-writeups/stargazers)
 [![Forks](https://img.shields.io/github/forks/momenbasel/htb-writeups?style=for-the-badge&color=blue)](https://github.com/momenbasel/htb-writeups/network/members)
 [![Contributors](https://img.shields.io/github/contributors/momenbasel/htb-writeups?style=for-the-badge&color=green)](https://github.com/momenbasel/htb-writeups/graphs/contributors)
 [![License](https://img.shields.io/github/license/momenbasel/htb-writeups?style=for-the-badge)](LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/momenbasel/htb-writeups?style=for-the-badge&color=red)](https://github.com/momenbasel/htb-writeups/commits/main)
+
+**Why this repo?** Unlike scattered blog posts and single-author collections, this is a **structured, searchable index** of the entire HTB ecosystem - machines from 2017 to 2026, every CTF event, every challenge category, every ProLab - cross-referenced by technique, difficulty, OS, and certification relevance. Whether you're preparing for **OSCP**, **CPTS**, **CRTO**, or just sharpening your skills, start here.
 
 ---
 
@@ -523,6 +526,23 @@ Always practice ethical hacking. Only test systems you have explicit authorizati
 
 ---
 
+## Related Resources
+
+| Resource | Description |
+|----------|-------------|
+| [HackTricks](https://book.hacktricks.wiki/) | Comprehensive pentesting reference |
+| [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) | Payload and bypass collection |
+| [The Hacker Recipes](https://thehacker.recipes/) | Structured attack recipes |
+| [GTFOBins](https://gtfobins.github.io/) | Unix binary exploitation reference |
+| [LOLBAS](https://lolbas-project.github.io/) | Windows living-off-the-land binaries |
+| [WADComs](https://wadcoms.github.io/) | Windows/AD command reference |
+| [RevShells](https://www.revshells.com/) | Reverse shell generator |
+| [CyberChef](https://gchq.github.io/CyberChef/) | Data transformation toolkit |
+| [SecLists](https://github.com/danielmiessler/SecLists) | Wordlists for security testing |
+| [IppSec.rocks](https://ippsec.rocks/) | Searchable index of IppSec's HTB videos |
+
+---
+
 ## License
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
@@ -530,5 +550,11 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 ---
 
 <p align="center">
-  <b>Found this useful? Give it a star and share it with your team!</b>
+  <b>If this helped you pop a box or pass a cert, drop a star - it helps others find it too.</b>
+  <br><br>
+  <a href="https://github.com/momenbasel/htb-writeups/stargazers"><img src="https://img.shields.io/github/stars/momenbasel/htb-writeups?style=social" alt="Star this repo"></a>
 </p>
+
+---
+
+<sub>**Keywords:** hack the box writeups, HTB walkthrough, hackthebox machines, HTB challenges, OSCP prep machines, CPTS certification, penetration testing writeups, CTF writeups, active directory hacking, privilege escalation, web exploitation, binary exploitation, digital forensics, incident response, red team, blue team, cybersecurity training, ethical hacking, infosec resources, security cheatsheets</sub>
