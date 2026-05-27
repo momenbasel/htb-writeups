@@ -58,16 +58,31 @@ Writeups for retired HTB machines organized by difficulty. Each writeup includes
 
 | Difficulty | Path | Machines |
 |------------|------|----------|
-| Easy | [`machines/easy/`](machines/easy/) | 120+ |
-| Medium | [`machines/medium/`](machines/medium/) | 112+ |
-| Hard | [`machines/hard/`](machines/hard/) | 60+ |
-| Insane | [`machines/insane/`](machines/insane/) | 25+ |
+| Easy | [`machines/easy/`](machines/easy/) | 132+ |
+| Medium | [`machines/medium/`](machines/medium/) | 136+ |
+| Hard | [`machines/hard/`](machines/hard/) | 70+ |
+| Insane | [`machines/insane/`](machines/insane/) | 50+ |
 
 ### Recently Retired (2025-2026)
 
 | Machine | OS | Difficulty | Key Techniques | Date |
 |---------|----|------------|----------------|------|
+| [MonitorsFour](machines/insane/MonitorsFour/) | Windows | Insane | PHP Type Juggling, Cacti CVE, Docker API Escape | May 2026 |
+| [Pterodactyl](machines/insane/Pterodactyl/) | openSUSE | Insane | Pterodactyl Panel CVE-2025-49132, PEAR pearcmd LFI, Polkit | May 2026 |
+| [Helix](machines/medium/Helix/) | Linux | Medium | Apache NiFi ExecuteSQL + H2 Java Alias RCE | May 2026 |
+| [Overwatch](https://0xdf.gitlab.io/2026/05/09/htb-overwatch.html) | Windows | Insane | .NET Reversing, WCF Service Injection, DNS | May 2026 |
+| [Sorcery](machines/insane/Sorcery/) | Linux | Insane | Cypher Injection, WebAuthn XSS, Kafka, FreeIPA | Apr 2026 |
+| [PingPong](machines/hard/PingPong/) | Windows | Hard | Multi-Forest AD, MSSQL Delegation, ADCS | Apr 2026 |
+| [AirTouch](machines/hard/AirTouch/) | Linux | Hard | 802.11 WPA2 Crack, Evil Twin, PEAP-MSCHAPv2 | Apr 2026 |
+| [Eighteen](machines/hard/Eighteen/) | Windows | Hard | Win Server 2025, MSSQL Impersonation, Bad Successor dMSA | Apr 2026 |
 | [DarkZero](https://0xdf.gitlab.io/2026/04/04/htb-darkzero.html) | Windows | Hard | Cross-Forest Trust, AD Abuse | Apr 2026 |
+| [Pirate](machines/hard/Pirate/) | Windows | Hard | Pre2k, gMSA, PetitPotam, RBCD, S4U SPN Jack | Feb 2026 |
+| [VariaType](machines/medium/VariaType/) | Linux | Medium | fontTools CVE-2025-66034, FontForge CVE-2024-25082 | Mar 2026 |
+| [Interpreter](machines/medium/Interpreter/) | Linux | Medium | Mirth Connect CVE-2023-43208, Python eval() | Feb 2026 |
+| [Kobold](machines/easy/Kobold/) | Linux | Easy | MCPJam CVE-2026-23744, Docker Group | Mar 2026 |
+| [Facts](machines/easy/Facts/) | Linux | Easy | Camaleon CMS IDOR + Path Traversal + Facter Sudo | Jan 2026 |
+| [Code](machines/easy/Code/) | Linux | Easy | Python Sandbox Bypass, Backy Sudo | Aug 2025 |
+| [Cobblestone](machines/insane/Cobblestone/) | Linux | Insane | Second-Order SQLi, Twig SSTI, Cobbler XMLRPC | 2025 |
 | [Snapped](https://0xdf.gitlab.io/2026/04/01/htb-snapped.html) | Linux | Hard | Nginx UI RCE, Static Site Exploitation | Mar 2026 |
 | [Browsed](https://0xdf.gitlab.io/2026/03/28/htb-browsed.html) | Linux | Medium | Browser Extension Exploitation, Headless Chrome | Mar 2026 |
 | [Previous](https://0xdf.gitlab.io/2026/01/10/htb-previous.html) | Linux | Medium | NextJS Exploitation, Framework Abuse | Jan 2026 |
