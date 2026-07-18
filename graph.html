@@ -9,319 +9,988 @@ permalink: /graph/
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HTB Knowledge Graph - Interactive Machine & Technique Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --topbar-h: 60px;
+    --sidebar-w: 288px;
+    --bg: #050810;
+    --bg2: #0c1220;
+    --bg3: #111a2b;
+    --border: #1a2540;
+    --border-bright: #2a3a5e;
+    --text: #8d9cb8;
+    --text-dim: #55637f;
+    --text-bright: #dbe4f0;
+    --green: #9fef00;
+    --green-glow: rgba(159, 239, 0, 0.45);
+    --green-dim: rgba(159, 239, 0, 0.12);
+    --easy: #4ade80;
+    --medium: #fb923c;
+    --hard: #ef4444;
+    --insane: #a855f7;
+    --cyan: #22d3ee;
+    --amber: #fbbf24;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
   body {
-    background: #1e1e2e;
-    color: #cdd6f4;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
     overflow: hidden;
     height: 100vh;
     width: 100vw;
   }
 
-  /* ---- HEADER ---- */
-  #header {
+  ::selection { background: rgba(159, 239, 0, 0.25); color: #fff; }
+
+  /* ================= BOOT SEQUENCE ================= */
+  .boot {
     position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 56px;
-    background: #181825;
-    border-bottom: 2px solid #9fef00;
+    inset: 0;
+    z-index: 500;
+    background: var(--bg);
     display: flex;
     align-items: center;
-    padding: 0 24px;
-    z-index: 100;
-    gap: 16px;
+    justify-content: center;
+    transition: opacity 0.55s ease, visibility 0.55s ease;
   }
-  #header h1 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #9fef00;
-    white-space: nowrap;
-    letter-spacing: 0.5px;
-  }
-  #header .subtitle {
-    font-size: 12px;
-    color: #6c7086;
-    margin-left: 4px;
-  }
-  #header .stats {
-    margin-left: auto;
-    font-size: 12px;
-    color: #a6adc8;
-    display: flex;
-    gap: 16px;
-  }
-  #header .stats span { color: #9fef00; font-weight: 600; }
-  #back-link {
-    color: #9fef00;
-    text-decoration: none;
-    font-size: 13px;
-    border: 1px solid #9fef0044;
-    padding: 4px 12px;
-    border-radius: 4px;
-    transition: background 0.2s;
-  }
-  #back-link:hover { background: #9fef0022; }
+  .boot.done { opacity: 0; visibility: hidden; pointer-events: none; }
 
-  /* ---- SIDEBAR / FILTER PANEL ---- */
+  .boot-inner {
+    width: min(480px, 86vw);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .boot-logo {
+    margin-bottom: 1.5rem;
+  }
+
+  .boot-lines {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.9;
+    color: var(--text);
+    min-height: 11.4em;
+    width: 100%;
+  }
+
+  .boot-lines .ln-ok { color: var(--green); text-shadow: 0 0 8px var(--green-glow); }
+  .boot-lines .ln-head { color: var(--text-bright); font-weight: 700; letter-spacing: 0.08em; }
+
+  .boot-bar {
+    width: 100%;
+    height: 4px;
+    margin-top: 1.2rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .boot-bar span {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green-glow);
+    transition: width 0.18s ease;
+  }
+
+  .boot-skip {
+    margin-top: 1rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* ---- CRT scanline overlay: horizontal lines + RGB phosphor triads ---- */
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.16) 0px,
+      rgba(0, 0, 0, 0.16) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: 0.55;
+    animation: scan-drift 9s linear infinite;
+  }
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255, 0, 60, 0.028) 0px,
+      rgba(255, 0, 60, 0.028) 1px,
+      rgba(0, 255, 120, 0.028) 1px,
+      rgba(0, 255, 120, 0.028) 2px,
+      rgba(64, 0, 255, 0.028) 2px,
+      rgba(64, 0, 255, 0.028) 3px
+    );
+  }
+  @keyframes scan-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 0 60px; }
+  }
+
+  /* ---- LOGO CUBE ---- */
+  .logo-cube { display: block; flex-shrink: 0; }
+  .logo-cube .face {
+    stroke: var(--green);
+    stroke-width: 3;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 5px var(--green-glow));
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: cube-draw 1s ease forwards, cube-fill 0.7s ease 0.55s forwards;
+    fill-opacity: 0;
+  }
+  .logo-cube .face.top   { fill: rgba(159, 239, 0, 0.30); }
+  .logo-cube .face.left  { fill: rgba(159, 239, 0, 0.16); animation-delay: 0.15s, 0.7s; }
+  .logo-cube .face.right { fill: rgba(159, 239, 0, 0.06); animation-delay: 0.3s, 0.85s; }
+
+  @keyframes cube-draw { to { stroke-dashoffset: 0; } }
+  @keyframes cube-fill { to { fill-opacity: 1; } }
+
+  /* ---- TOP BAR ---- */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--topbar-h);
+    background: rgba(12, 18, 32, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    z-index: 100;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-width: 0;
+  }
+
+  .brand .logo-cube { width: 30px; height: 30px; }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    min-width: 0;
+  }
+
+  .brand-title {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--green);
+    text-shadow: 0 0 10px var(--green-glow);
+    white-space: nowrap;
+  }
+
+  .brand-sub {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 11px;
+    margin-left: 3px;
+    background: var(--green);
+    vertical-align: -1px;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .topnav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  .topnav a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .topnav a:hover {
+    color: var(--green);
+    border-color: var(--border-bright);
+    background: var(--green-dim);
+  }
+
+  .topnav a.active {
+    color: var(--green);
+    border-color: rgba(159, 239, 0, 0.4);
+    background: var(--green-dim);
+  }
+
+  /* ---- SIDEBAR / CONTROL PANEL ---- */
   #sidebar {
     position: fixed;
-    top: 56px; left: 0; bottom: 0;
-    width: 280px;
-    background: #181825;
-    border-right: 1px solid #313244;
-    padding: 16px;
+    top: var(--topbar-h); left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 1.1rem 1.25rem 2rem;
     overflow-y: auto;
     z-index: 90;
     transition: transform 0.3s ease;
   }
-  #sidebar.collapsed { transform: translateX(-280px); }
-  #sidebar h3 {
-    font-size: 11px;
+  #sidebar.collapsed { transform: translateX(-100%); }
+
+  .panel-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    color: var(--text-dim);
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: #9fef00;
-    margin: 16px 0 8px 0;
-    padding-bottom: 4px;
-    border-bottom: 1px solid #313244;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 7px;
+    margin-bottom: 0.9rem;
   }
-  #sidebar h3:first-child { margin-top: 0; }
+
+  .side-readout {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .side-readout > div {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.45rem 0.6rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .side-readout .k {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .side-readout .v {
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--green);
+    text-shadow: 0 0 8px var(--green-glow);
+  }
+
+  .side-visible {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+  .side-visible span { color: var(--text-bright); }
+
+  #sidebar h3 {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 1.1rem 0 0.55rem 0;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  #sidebar h3::before {
+    content: "//";
+    color: var(--green);
+    margin-right: 0.45rem;
+  }
+
+  /* search */
+  .side-search { position: relative; }
 
   #search-box {
     width: 100%;
-    padding: 8px 12px;
-    background: #11111b;
-    border: 1px solid #313244;
-    border-radius: 6px;
-    color: #cdd6f4;
-    font-size: 13px;
+    padding: 0.55rem 2rem 0.55rem 1.9rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-bright);
+    font-family: var(--mono);
+    font-size: 0.78rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    caret-color: var(--green);
   }
-  #search-box:focus { border-color: #9fef00; }
-  #search-box::placeholder { color: #585b70; }
+  #search-box:focus {
+    border-color: rgba(159, 239, 0, 0.55);
+    box-shadow: 0 0 0 3px rgba(159, 239, 0, 0.12);
+  }
+  #search-box::placeholder { color: var(--text-dim); }
 
-  .filter-group { margin-bottom: 4px; }
+  .side-search::before {
+    content: ">";
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--green);
+    font-family: var(--mono);
+    font-weight: 700;
+    text-shadow: 0 0 8px var(--green-glow);
+    pointer-events: none;
+  }
+
+  .side-search kbd {
+    position: absolute;
+    right: 0.55rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    background: var(--bg3);
+    border: 1px solid var(--border-bright);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 5px;
+    pointer-events: none;
+  }
+
+  /* custom radar-node checkboxes */
+  .filter-group { display: flex; flex-direction: column; gap: 2px; }
+
   .filter-group label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 4px 0;
-    font-size: 13px;
+    gap: 0.6rem;
+    padding: 0.28rem 0.35rem;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
     cursor: pointer;
-    color: #bac2de;
-    transition: color 0.15s;
+    color: var(--text);
+    transition: color 0.15s ease, background 0.15s ease;
+    user-select: none;
   }
-  .filter-group label:hover { color: #cdd6f4; }
+  .filter-group label:hover { color: var(--text-bright); background: rgba(255, 255, 255, 0.02); }
+
   .filter-group input[type="checkbox"] {
-    accent-color: #9fef00;
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .ctrl-ring {
     width: 14px;
     height: 14px;
-    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid var(--border-bright);
+    background: var(--bg);
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
+
+  .ctrl-ring::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .filter-group input:checked + .ctrl-ring {
+    border-color: rgba(159, 239, 0, 0.7);
+    box-shadow: 0 0 8px rgba(159, 239, 0, 0.25);
+  }
+
+  .filter-group input:checked + .ctrl-ring::after {
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green-glow);
+  }
+
+  .filter-group input:focus-visible + .ctrl-ring {
+    outline: 2px solid rgba(159, 239, 0, 0.6);
+    outline-offset: 2px;
+  }
+
+  .filter-group input:not(:checked) ~ .ctrl-label { opacity: 0.45; }
+
   .color-dot {
-    width: 10px; height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     display: inline-block;
     flex-shrink: 0;
+    box-shadow: 0 0 6px currentColor;
   }
 
+  /* sidebar toggle */
   #toggle-sidebar {
     position: fixed;
-    top: 64px; left: 280px;
+    top: calc(var(--topbar-h) + 10px);
+    left: var(--sidebar-w);
     z-index: 95;
-    background: #181825;
-    border: 1px solid #313244;
+    background: var(--bg2);
+    border: 1px solid var(--border);
     border-left: none;
-    color: #9fef00;
-    padding: 8px 6px;
+    color: var(--green);
+    padding: 0.5rem 0.35rem;
     cursor: pointer;
-    border-radius: 0 6px 6px 0;
-    font-size: 14px;
+    border-radius: 0 5px 5px 0;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    line-height: 1;
+    transition: left 0.3s ease, background 0.15s ease;
+  }
+  #toggle-sidebar:hover { background: var(--bg3); }
+  #toggle-sidebar.shifted { left: 0; }
+
+  /* ---- RADAR HUD ---- */
+  .hud-radar {
+    position: fixed;
+    bottom: 42px;
+    left: calc(var(--sidebar-w) + 16px);
+    width: 96px;
+    height: 96px;
+    z-index: 90;
+    border-radius: 50%;
+    border: 1px solid var(--border-bright);
+    background: radial-gradient(circle at 50% 50%, rgba(159, 239, 0, 0.04), rgba(5, 8, 16, 0.9) 75%);
+    overflow: visible;
     transition: left 0.3s ease;
   }
-  #toggle-sidebar.shifted { left: 0; }
+  .hud-radar.shifted { left: 16px; }
+
+  .radar-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed rgba(42, 58, 94, 0.9);
+    pointer-events: none;
+  }
+  .radar-ring.r1 { inset: 18%; }
+  .radar-ring.r2 { inset: 36%; border-style: solid; }
+
+  .radar-sweep {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .radar-sweep::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(159, 239, 0, 0.45), rgba(159, 239, 0, 0.06) 70deg, transparent 90deg);
+    animation: radar-spin 4.2s linear infinite;
+  }
+  @keyframes radar-spin { to { transform: rotate(360deg); } }
+
+  .blip {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green-glow);
+    animation: led-pulse 1.8s ease-in-out infinite;
+  }
+
+  .radar-label {
+    position: absolute;
+    left: 50%;
+    bottom: -18px;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
 
   /* ---- LEGEND ---- */
   #legend {
     position: fixed;
-    bottom: 16px; right: 16px;
-    background: #181825ee;
-    border: 1px solid #313244;
-    border-radius: 8px;
-    padding: 12px 16px;
+    bottom: 42px; right: 16px;
+    background: rgba(12, 18, 32, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
     z-index: 90;
-    font-size: 12px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
   }
   #legend h4 {
-    color: #9fef00;
-    font-size: 11px;
+    color: var(--text-dim);
+    font-size: 0.55rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
   }
+  #legend h4::before { content: "// "; color: var(--green); }
   .legend-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-    color: #a6adc8;
+    gap: 0.55rem;
+    margin-bottom: 0.3rem;
+    color: var(--text);
+    letter-spacing: 0.03em;
   }
+  .legend-item:last-child { margin-bottom: 0; }
   .legend-circle {
-    width: 12px; height: 12px;
+    width: 10px; height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
+    box-shadow: 0 0 6px currentColor;
   }
   .legend-diamond {
-    width: 12px; height: 12px;
+    width: 10px; height: 10px;
     flex-shrink: 0;
     transform: rotate(45deg);
+    border-radius: 1px;
+    box-shadow: 0 0 6px currentColor;
   }
   .legend-star {
-    width: 12px; height: 12px;
+    width: 11px; height: 11px;
     flex-shrink: 0;
-    background: #f9e2af;
+    background: var(--amber);
     clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
   }
+
+  /* ---- FIT VIEW BUTTON ---- */
+  #fit-view {
+    position: fixed;
+    bottom: 66px;
+    left: calc(var(--sidebar-w) + 128px);
+    z-index: 90;
+    background: rgba(12, 18, 32, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    padding: 0.45rem 0.8rem;
+    cursor: pointer;
+    transition: left 0.3s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  #fit-view:hover { color: var(--green); border-color: rgba(159, 239, 0, 0.4); }
+  #fit-view.shifted { left: 128px; }
+
+  /* ---- TICKER ---- */
+  .ticker {
+    position: fixed;
+    bottom: 0;
+    left: var(--sidebar-w);
+    right: 0;
+    height: 28px;
+    background: rgba(12, 18, 32, 0.94);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border);
+    overflow: hidden;
+    z-index: 89;
+    display: flex;
+    align-items: center;
+    transition: left 0.3s ease;
+  }
+  .ticker.shifted { left: 0; }
+
+  .ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker-scroll 42s linear infinite;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  .ticker-track span { padding-right: 2.5rem; }
+  .ticker-track b { color: var(--green); font-weight: 600; }
+  @keyframes ticker-scroll { to { transform: translateX(-50%); } }
 
   /* ---- TOOLTIP ---- */
   #tooltip {
     position: fixed;
     pointer-events: none;
-    background: #181825f0;
-    border: 1px solid #9fef0066;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 13px;
+    background: rgba(12, 18, 32, 0.95);
+    border: 1px solid rgba(159, 239, 0, 0.35);
+    border-radius: 6px;
+    padding: 0.75rem 0.95rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
     max-width: 320px;
     z-index: 200;
     opacity: 0;
-    transition: opacity 0.15s;
+    transition: opacity 0.15s ease;
     backdrop-filter: blur(8px);
-    box-shadow: 0 4px 20px #00000066;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(159, 239, 0, 0.06);
   }
   #tooltip.visible { opacity: 1; }
   #tooltip .tt-name {
     font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 0.45rem;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 8px currentColor;
   }
   #tooltip .tt-row {
     display: flex;
     gap: 6px;
     margin-bottom: 2px;
-    color: #a6adc8;
+    color: var(--text);
   }
-  #tooltip .tt-label { color: #6c7086; min-width: 80px; }
+  #tooltip .tt-label { color: var(--text-dim); min-width: 80px; }
   #tooltip .tt-techniques {
-    margin-top: 6px;
+    margin-top: 0.5rem;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
   }
   #tooltip .tt-tag {
-    background: #31324488;
-    border: 1px solid #45475a;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 11px;
-    color: #89dceb;
+    background: rgba(159, 239, 0, 0.06);
+    border: 1px solid rgba(159, 239, 0, 0.16);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 0.64rem;
+    color: var(--green);
   }
 
   /* ---- SVG CANVAS ---- */
   #graph-container {
     position: fixed;
-    top: 56px; left: 280px; right: 0; bottom: 0;
+    top: var(--topbar-h); left: var(--sidebar-w); right: 0; bottom: 0;
     transition: left 0.3s ease;
+    background:
+      radial-gradient(1000px 600px at 70% 20%, rgba(159, 239, 0, 0.03), transparent 60%),
+      radial-gradient(800px 500px at 20% 90%, rgba(34, 211, 238, 0.03), transparent 60%),
+      var(--bg);
+  }
+  #graph-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(42, 58, 94, 0.14) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42, 58, 94, 0.14) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
   }
   #graph-container.expanded { left: 0; }
-  #graph-container svg { width: 100%; height: 100%; display: block; }
+  #graph-container svg { width: 100%; height: 100%; display: block; position: relative; }
+
+  /* corner frame brackets */
+  .frame-corners i {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(159, 239, 0, 0.35);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .frame-corners .tl { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+  .frame-corners .tr { top: 12px; right: 12px; border-left: none; border-bottom: none; }
+  .frame-corners .bl { bottom: 40px; left: 12px; border-right: none; border-top: none; }
+  .frame-corners .br { bottom: 40px; right: 12px; border-left: none; border-top: none; }
 
   /* ---- NODE STYLES ---- */
-  .node { cursor: pointer; }
+  .node { cursor: pointer; animation: node-in 0.6s ease both; }
+  @keyframes node-in { from { opacity: 0; } to { opacity: 1; } }
+
   .node text {
+    font-family: var(--mono);
     font-size: 10px;
-    fill: #cdd6f4;
+    fill: var(--text-bright);
     pointer-events: none;
     text-anchor: middle;
     dominant-baseline: central;
   }
   .link {
-    stroke-opacity: 0.25;
+    stroke-opacity: 0.22;
     transition: stroke-opacity 0.2s;
   }
-  .link.highlighted { stroke-opacity: 0.8; }
-  .node.dimmed circle,
-  .node.dimmed rect,
-  .node.dimmed polygon { opacity: 0.1; }
-  .node.dimmed text { opacity: 0.1; }
-  .link.dimmed { stroke-opacity: 0.03; }
+  .link.highlighted {
+    stroke-opacity: 0.85;
+    stroke-dasharray: 7 5;
+    animation: dash-flow 0.7s linear infinite;
+  }
+  @keyframes dash-flow { to { stroke-dashoffset: -12; } }
 
-  /* ---- RESPONSIVE ---- */
-  @media (max-width: 768px) {
-    #sidebar { width: 240px; }
-    #toggle-sidebar { left: 240px; }
-    #graph-container { left: 0; }
-    #sidebar { transform: translateX(-240px); }
-    #toggle-sidebar { left: 0; }
-    #header h1 { font-size: 14px; }
-    #header .subtitle { display: none; }
-    #legend { bottom: 8px; right: 8px; padding: 8px 12px; }
+  .ping {
+    pointer-events: none;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ping 3.2s ease-out infinite;
+  }
+  @keyframes ping {
+    0%   { transform: scale(1); opacity: 0.75; }
+    80%  { transform: scale(2.4); opacity: 0; }
+    100% { transform: scale(2.4); opacity: 0; }
   }
 
-  /* scrollbar */
+  .node.dimmed circle,
+  .node.dimmed rect,
+  .node.dimmed polygon { opacity: 0.08; }
+  .node.dimmed text { opacity: 0.08; }
+  .node.dimmed .ping { animation: none; opacity: 0; }
+  .link.dimmed { stroke-opacity: 0.03; }
+
+  /* ---- CRT flicker (unstable phosphor) ---- */
+  @keyframes flicker {
+    0% { opacity: 0.278 } 5% { opacity: 0.347 } 10% { opacity: 0.236 }
+    15% { opacity: 0.906 } 20% { opacity: 0.181 } 25% { opacity: 0.838 }
+    30% { opacity: 0.655 } 35% { opacity: 0.678 } 40% { opacity: 0.265 }
+    45% { opacity: 0.846 } 50% { opacity: 0.96 } 55% { opacity: 0.085 }
+    60% { opacity: 0.203 } 65% { opacity: 0.719 } 70% { opacity: 0.534 }
+    75% { opacity: 0.372 } 80% { opacity: 0.714 } 85% { opacity: 0.704 }
+    90% { opacity: 0.7 } 95% { opacity: 0.361 } 100% { opacity: 0.243 }
+  }
+  .boot-lines { animation: flicker 2.4s steps(1) infinite; }
+
+  .boot-caret {
+    display: inline-block;
+    width: 7px;
+    height: 12px;
+    margin-left: 2px;
+    background: var(--green);
+    vertical-align: -2px;
+    animation: blink 0.85s steps(1) infinite;
+  }
+
+  /* ---- nav underline draw ---- */
+  .topnav a {
+    position: relative;
+  }
+  .topnav a::after {
+    content: "";
+    position: absolute;
+    left: 0.65rem;
+    right: 0.65rem;
+    bottom: 2px;
+    height: 1px;
+    background: var(--green);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.22s ease;
+  }
+  .topnav a:hover::after { transform: scaleX(1); }
+
+  /* ---- technique labels: hidden until hovered / connected ---- */
+  .node text.tech-label {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .node:hover text.tech-label,
+  .node.lit text.tech-label { opacity: 1; }
+
+  /* ---- owned (pwned) machines ---- */
+  .node.owned > circle:first-of-type { fill-opacity: 0.35; }
+  .node.owned text.machine-label {
+    text-decoration: line-through;
+    opacity: 0.45;
+  }
+  .node text.owned-flag {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    fill: var(--green);
+    text-anchor: middle;
+    pointer-events: none;
+    text-shadow: 0 0 6px var(--green-glow);
+  }
+
+  /* ---- ASCII drift layer ---- */
+  #drift {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ---- sidebar hint ---- */
+  .side-hint {
+    margin-top: 1.2rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed var(--border);
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    line-height: 1.8;
+    color: var(--text-dim);
+  }
+  .side-hint b { color: var(--green); font-weight: 600; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 860px) {
+    .brand-sub { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    #sidebar { width: min(260px, 85vw); transform: translateX(-100%); }
+    #sidebar:not(.collapsed) { transform: translateX(0); }
+    #toggle-sidebar { left: 0; }
+    #toggle-sidebar.shifted { left: min(260px, 85vw); }
+    #graph-container { left: 0; }
+    .ticker { left: 0; }
+    .hud-radar, .hud-radar.shifted { left: 16px; }
+    #fit-view, #fit-view.shifted { left: 128px; }
+    .topnav a:not(.active) { display: none; }
+    #legend { bottom: 36px; right: 8px; padding: 0.5rem 0.7rem; font-size: 0.6rem; }
+  }
+
+  /* scrollbars */
   #sidebar::-webkit-scrollbar { width: 6px; }
   #sidebar::-webkit-scrollbar-track { background: transparent; }
-  #sidebar::-webkit-scrollbar-thumb { background: #313244; border-radius: 3px; }
-  #sidebar::-webkit-scrollbar-thumb:hover { background: #45475a; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+  #sidebar::-webkit-scrollbar-thumb:hover { background: rgba(159, 239, 0, 0.35); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scanlines, .cursor, .blip, .radar-sweep::before, .ping,
+    .ticker-track, .logo-cube .face { animation: none !important; }
+    .logo-cube .face { stroke-dashoffset: 0; fill-opacity: 1; }
+    .boot { display: none; }
+    * { transition-duration: 0.01ms !important; }
+  }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div id="header">
-  <a id="back-link" href="/htb-writeups/">Back to Writeups</a>
-  <h1>HTB Knowledge Graph</h1>
-  <span class="subtitle">Interactive Machine & Technique Map</span>
-  <div class="stats">
-    <div>Machines: <span id="stat-machines">0</span></div>
-    <div>Techniques: <span id="stat-techniques">0</span></div>
-    <div>Connections: <span id="stat-links">0</span></div>
+<!-- BOOT SEQUENCE -->
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot-inner">
+    <svg class="logo-cube boot-logo" viewBox="0 0 100 100" width="64" height="64">
+      <polygon class="face top" points="50,6 88,28 50,50 12,28"/>
+      <polygon class="face left" points="12,28 50,50 50,94 12,72"/>
+      <polygon class="face right" points="88,28 88,72 50,94 50,50"/>
+    </svg>
+    <div class="boot-lines" id="bootLines"></div>
+    <div class="boot-bar"><span id="bootBar"></span></div>
+    <div class="boot-skip">press any key / click to skip</div>
   </div>
 </div>
 
+<div class="scanlines" aria-hidden="true"></div>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo-cube" viewBox="0 0 100 100" width="30" height="30" aria-hidden="true">
+      <polygon class="face top" points="50,6 88,28 50,50 12,28"/>
+      <polygon class="face left" points="12,28 50,50 50,94 12,72"/>
+      <polygon class="face right" points="88,28 88,72 50,94 50,50"/>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-title">HTB//KNOWLEDGE_GRAPH</span>
+      <span class="brand-sub">root@htb:~$ ./graph --render --force-directed<span class="cursor" aria-hidden="true"></span></span>
+    </div>
+  </div>
+  <nav class="topnav">
+    <a href="/htb-writeups/">Home</a>
+    <a href="/htb-writeups/finder/">Finder</a>
+    <a href="/htb-writeups/graph/" class="active">Graph</a>
+    <a href="/htb-writeups/attack-paths/">Paths</a>
+    <a href="/htb-writeups/skill-trees/">Skills</a>
+    <a href="https://github.com/momenbasel/htb-writeups">GitHub</a>
+  </nav>
+</header>
+
 <!-- SIDEBAR -->
-<button id="toggle-sidebar" title="Toggle filter panel">&#9776;</button>
+<button id="toggle-sidebar" title="Toggle control panel" aria-label="Toggle control panel">&#9664;</button>
 <div id="sidebar">
+  <span class="panel-tag">CONTROL PANEL</span>
+
+  <div class="side-readout">
+    <div><span class="k">machines</span><span class="v" id="stat-machines">0</span></div>
+    <div><span class="k">technqs</span><span class="v" id="stat-techniques">0</span></div>
+    <div><span class="k">links</span><span class="v" id="stat-links">0</span></div>
+  </div>
+  <div class="side-visible">visible: <span id="stat-visible">all nodes</span> · pwned: <span id="stat-owned">0</span></div>
+
   <h3>Search</h3>
-  <input type="text" id="search-box" placeholder="Search machines...">
+  <div class="side-search">
+    <input type="text" id="search-box" placeholder="search machines..." aria-label="Search machines">
+    <kbd>/</kbd>
+  </div>
 
   <h3>Difficulty</h3>
   <div class="filter-group" id="filter-difficulty">
-    <label><input type="checkbox" value="Easy" checked><span class="color-dot" style="background:#a6e3a1"></span> Easy</label>
-    <label><input type="checkbox" value="Medium" checked><span class="color-dot" style="background:#fab387"></span> Medium</label>
-    <label><input type="checkbox" value="Hard" checked><span class="color-dot" style="background:#f38ba8"></span> Hard</label>
-    <label><input type="checkbox" value="Insane" checked><span class="color-dot" style="background:#cba6f7"></span> Insane</label>
+    <label><input type="checkbox" value="Easy" checked><span class="ctrl-ring"></span><span class="color-dot" style="background:#4ade80;color:#4ade80"></span><span class="ctrl-label">easy</span></label>
+    <label><input type="checkbox" value="Medium" checked><span class="ctrl-ring"></span><span class="color-dot" style="background:#fb923c;color:#fb923c"></span><span class="ctrl-label">medium</span></label>
+    <label><input type="checkbox" value="Hard" checked><span class="ctrl-ring"></span><span class="color-dot" style="background:#ef4444;color:#ef4444"></span><span class="ctrl-label">hard</span></label>
+    <label><input type="checkbox" value="Insane" checked><span class="ctrl-ring"></span><span class="color-dot" style="background:#a855f7;color:#a855f7"></span><span class="ctrl-label">insane</span></label>
   </div>
 
   <h3>Operating System</h3>
   <div class="filter-group" id="filter-os">
-    <label><input type="checkbox" value="Linux" checked> Linux</label>
-    <label><input type="checkbox" value="Windows" checked> Windows</label>
+    <label><input type="checkbox" value="Linux" checked><span class="ctrl-ring"></span><span class="ctrl-label">linux</span></label>
+    <label><input type="checkbox" value="Windows" checked><span class="ctrl-ring"></span><span class="ctrl-label">windows</span></label>
   </div>
 
   <h3>Node Types</h3>
   <div class="filter-group" id="filter-types">
-    <label><input type="checkbox" value="machine" checked> Machines</label>
-    <label><input type="checkbox" value="technique" checked><span class="color-dot" style="background:#89dceb"></span> Techniques</label>
-    <label><input type="checkbox" value="certification" checked><span class="color-dot" style="background:#f9e2af"></span> Certifications</label>
+    <label><input type="checkbox" value="machine" checked><span class="ctrl-ring"></span><span class="ctrl-label">machines</span></label>
+    <label><input type="checkbox" value="technique" checked><span class="ctrl-ring"></span><span class="color-dot" style="background:#22d3ee;color:#22d3ee"></span><span class="ctrl-label">techniques</span></label>
+    <label><input type="checkbox" value="certification" checked><span class="ctrl-ring"></span><span class="color-dot" style="background:#fbbf24;color:#fbbf24"></span><span class="ctrl-label">certifications</span></label>
   </div>
 
   <h3>Technique Categories</h3>
   <div class="filter-group" id="filter-technique-cat"></div>
+
+  <div class="side-hint">
+    <b>[lmb]</b> drag / open writeup<br>
+    <b>[rmb]</b> mark machine pwned<br>
+    <b>[whl]</b> zoom · <b>[/]</b> search
+  </div>
 </div>
 
 <!-- TOOLTIP -->
@@ -333,16 +1002,38 @@ permalink: /graph/
 <!-- LEGEND -->
 <div id="legend">
   <h4>Legend</h4>
-  <div class="legend-item"><div class="legend-circle" style="background:#a6e3a1"></div> Easy Machine</div>
-  <div class="legend-item"><div class="legend-circle" style="background:#fab387"></div> Medium Machine</div>
-  <div class="legend-item"><div class="legend-circle" style="background:#f38ba8"></div> Hard Machine</div>
-  <div class="legend-item"><div class="legend-circle" style="background:#cba6f7"></div> Insane Machine</div>
-  <div class="legend-item"><div class="legend-diamond" style="background:#89dceb"></div> Technique</div>
-  <div class="legend-item"><div class="legend-star"></div> Certification</div>
+  <div class="legend-item"><div class="legend-circle" style="background:#4ade80;color:#4ade80"></div> easy</div>
+  <div class="legend-item"><div class="legend-circle" style="background:#fb923c;color:#fb923c"></div> medium</div>
+  <div class="legend-item"><div class="legend-circle" style="background:#ef4444;color:#ef4444"></div> hard</div>
+  <div class="legend-item"><div class="legend-circle" style="background:#a855f7;color:#a855f7"></div> insane</div>
+  <div class="legend-item"><div class="legend-diamond" style="background:#22d3ee;color:#22d3ee"></div> technique</div>
+  <div class="legend-item"><div class="legend-star"></div> certification</div>
 </div>
 
+<!-- RADAR HUD -->
+<div class="hud-radar" id="radar" aria-hidden="true">
+  <div class="radar-ring r1"></div>
+  <div class="radar-ring r2"></div>
+  <div class="radar-sweep"></div>
+  <span class="blip" style="top:26%;left:62%"></span>
+  <span class="blip" style="top:58%;left:32%;animation-delay:1.1s"></span>
+  <span class="blip" style="top:70%;left:64%;animation-delay:2.2s"></span>
+  <span class="radar-label">scan</span>
+</div>
+
+<!-- FIT VIEW -->
+<button id="fit-view" title="Zoom to fit">[ fit ]</button>
+
 <!-- GRAPH CONTAINER -->
-<div id="graph-container"></div>
+<div id="graph-container">
+  <canvas id="drift" aria-hidden="true"></canvas>
+  <div class="frame-corners" aria-hidden="true"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker" id="ticker" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
 
 <script>
 // ===========================================================================
@@ -352,14 +1043,14 @@ permalink: /graph/
 const baseUrl = "/htb-writeups";
 
 const DIFFICULTY_COLORS = {
-  "Easy":   "#a6e3a1",
-  "Medium": "#fab387",
-  "Hard":   "#f38ba8",
-  "Insane": "#cba6f7"
+  "Easy":   "#4ade80",
+  "Medium": "#fb923c",
+  "Hard":   "#ef4444",
+  "Insane": "#a855f7"
 };
 
-const TECHNIQUE_COLOR = "#89dceb";
-const CERT_COLOR = "#f9e2af";
+const TECHNIQUE_COLOR = "#22d3ee";
+const CERT_COLOR = "#fbbf24";
 
 const TECHNIQUE_CATEGORIES = {
   "Web":           ["SQL Injection", "XSS", "SSRF", "SSTI", "LFI/RFI", "Command Injection", "File Upload", "Deserialization", "XXE", "Web Shell"],
@@ -560,6 +1251,90 @@ document.getElementById("stat-techniques").textContent = techniqueList.length;
 document.getElementById("stat-links").textContent = links.length;
 
 // ===========================================================================
+// BOOT SEQUENCE
+// ===========================================================================
+(function runBoot() {
+  const boot = document.getElementById("boot");
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    boot.remove();
+    return;
+  }
+  const linesEl = document.getElementById("bootLines");
+  const barEl = document.getElementById("bootBar");
+  const lines = [
+    { t: "HTB//KNOWLEDGE_GRAPH v2.1", cls: "ln-head", speed: 18 },
+    { t: "> init core.module ............ OK" },
+    { t: "> index " + String(machines.length).padStart(2, "0") + " machines ............ OK" },
+    { t: "> map " + techniqueList.length + " techniques ........... OK" },
+    { t: "> link " + links.length + " edges ............... OK" },
+    { t: "> render force-directed ....... OK" }
+  ];
+  let li = 0;
+  let finished = false;
+
+  const caret = document.createElement("span");
+  caret.className = "boot-caret";
+
+  function finish() {
+    if (finished) return;
+    finished = true;
+    boot.classList.add("done");
+    setTimeout(() => boot.remove(), 650);
+  }
+
+  function typeLine() {
+    if (finished) return;
+    if (li >= lines.length) { setTimeout(finish, 320); return; }
+    const ln = lines[li];
+    const div = document.createElement("div");
+    if (ln.cls) div.className = ln.cls;
+    linesEl.appendChild(div);
+    const text = ln.t;
+    let ci = 0;
+    div.appendChild(caret);
+    const speed = ln.speed || 7;
+
+    function typeChar() {
+      if (finished) return;
+      if (ci >= text.length) {
+        // colorize trailing OK once the line is complete
+        div.innerHTML = text.replace(/ OK$/, '<span class="ln-ok">OK</span>');
+        li++;
+        barEl.style.width = Math.round(li / lines.length * 100) + "%";
+        setTimeout(typeLine, 90);
+        return;
+      }
+      div.insertBefore(document.createTextNode(text[ci]), caret);
+      ci++;
+      setTimeout(typeChar, speed);
+    }
+    typeChar();
+  }
+
+  window.addEventListener("keydown", finish, { once: true });
+  boot.addEventListener("pointerdown", finish);
+  typeLine();
+})();
+
+// ===========================================================================
+// TICKER
+// ===========================================================================
+(function buildTicker() {
+  const seg =
+    '// <b>' + machines.length + '</b> machines indexed &nbsp;// <b>' + techniqueList.length + '</b> techniques mapped ' +
+    '&nbsp;// <b>' + links.length + '</b> edges linked &nbsp;// cert tracks: <b>OSCP · CPTS · CRTO · CRTE · eWPT</b> ' +
+    '&nbsp;// drag nodes to reorganize &nbsp;// scroll to zoom &nbsp;// hover to trace connections ' +
+    '&nbsp;// <b>rmb</b>: mark machine pwned &nbsp;// click a machine to open its 0xdf writeup &nbsp;';
+  const track = document.getElementById("tickerTrack");
+  const a = document.createElement("span");
+  const b = document.createElement("span");
+  a.innerHTML = seg;
+  b.innerHTML = seg;
+  track.appendChild(a);
+  track.appendChild(b);
+})();
+
+// ===========================================================================
 // POPULATE TECHNIQUE CATEGORY FILTERS
 // ===========================================================================
 const techCatContainer = document.getElementById("filter-technique-cat");
@@ -567,8 +1342,14 @@ Object.keys(TECHNIQUE_CATEGORIES).concat(["Other"]).forEach(cat => {
   const label = document.createElement("label");
   const cb = document.createElement("input");
   cb.type = "checkbox"; cb.value = cat; cb.checked = true;
+  const ring = document.createElement("span");
+  ring.className = "ctrl-ring";
+  const txt = document.createElement("span");
+  txt.className = "ctrl-label";
+  txt.textContent = cat.toLowerCase();
   label.appendChild(cb);
-  label.appendChild(document.createTextNode(" " + cat));
+  label.appendChild(ring);
+  label.appendChild(txt);
   techCatContainer.appendChild(label);
 });
 
@@ -625,7 +1406,7 @@ const linkElements = g.append("g")
   .data(links)
   .join("line")
   .attr("class", "link")
-  .attr("stroke", d => d.type === "cert-machine" ? "#f9e2af" : "#45475a")
+  .attr("stroke", d => d.type === "cert-machine" ? "#fbbf24" : "#2a3a5e")
   .attr("stroke-width", d => d.type === "cert-machine" ? 0.5 : 1);
 
 // Node groups
@@ -634,19 +1415,20 @@ const nodeElements = g.append("g")
   .data(nodes)
   .join("g")
   .attr("class", "node")
+  .style("animation-delay", (d, i) => Math.min(i * 6, 1200) + "ms")
   .call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
     .on("end", dragended));
 
 // Draw shapes based on type
-nodeElements.each(function(d) {
+nodeElements.each(function(d, i) {
   const el = d3.select(this);
   if (d.type === "machine") {
     el.append("circle")
       .attr("r", d.radius)
       .attr("fill", d.color)
-      .attr("stroke", "#11111b")
+      .attr("stroke", "#050810")
       .attr("stroke-width", 1.5);
   } else if (d.type === "technique") {
     // Diamond shape
@@ -657,22 +1439,29 @@ nodeElements.each(function(d) {
       .attr("y", -d.radius * 0.8)
       .attr("transform", "rotate(45)")
       .attr("fill", d.color)
-      .attr("stroke", "#11111b")
+      .attr("stroke", "#050810")
       .attr("stroke-width", 1.5)
       .attr("rx", 1);
   } else if (d.type === "certification") {
-    // Star / larger circle with distinct look
+    // Sonar ping ring + main disc + label
+    el.append("circle")
+      .attr("class", "ping")
+      .attr("r", d.radius + 3)
+      .attr("fill", "none")
+      .attr("stroke", d.color)
+      .attr("stroke-width", 1)
+      .style("animation-delay", ((i * 0.7) % 3.2) + "s");
     el.append("circle")
       .attr("r", d.radius)
       .attr("fill", d.color)
-      .attr("stroke", "#11111b")
+      .attr("stroke", "#050810")
       .attr("stroke-width", 2);
     el.append("text")
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
       .attr("font-size", "8px")
       .attr("font-weight", "700")
-      .attr("fill", "#11111b")
+      .attr("fill", "#050810")
       .text(d.name);
   }
 });
@@ -680,9 +1469,10 @@ nodeElements.each(function(d) {
 // Labels for machines and techniques
 nodeElements.filter(d => d.type !== "certification")
   .append("text")
+  .attr("class", d => d.type === "technique" ? "tech-label" : "machine-label")
   .attr("dy", d => d.radius + 12)
   .attr("font-size", d => d.type === "technique" ? "9px" : "10px")
-  .attr("fill", d => d.type === "technique" ? "#89dceb" : "#cdd6f4")
+  .attr("fill", d => d.type === "technique" ? "#22d3ee" : "#dbe4f0")
   .attr("font-weight", d => d.type === "technique" ? "400" : "600")
   .text(d => d.name);
 
@@ -701,8 +1491,8 @@ nodeElements.on("mouseover", function(event, d) {
   if (d.type === "machine") {
     ttName.textContent = d.name;
     let html = `
-      <div class="tt-row"><span class="tt-label">OS:</span> ${d.os}</div>
-      <div class="tt-row"><span class="tt-label">Difficulty:</span> <span style="color:${d.color}">${d.difficulty}</span></div>
+      <div class="tt-row"><span class="tt-label">os:</span> ${d.os}</div>
+      <div class="tt-row"><span class="tt-label">difficulty:</span> <span style="color:${d.color}">${d.difficulty}</span></div>
     `;
     if (d.techniques.length > 0) {
       html += `<div class="tt-techniques">`;
@@ -724,8 +1514,8 @@ nodeElements.on("mouseover", function(event, d) {
         const mId = sid === d.id ? tid : sid;
         return mId.replace("machine:", "");
       });
-    let html = `<div class="tt-row"><span class="tt-label">Category:</span> ${d.category || "Other"}</div>`;
-    html += `<div class="tt-row"><span class="tt-label">Machines:</span> ${connectedMachines.length}</div>`;
+    let html = `<div class="tt-row"><span class="tt-label">category:</span> ${d.category || "Other"}</div>`;
+    html += `<div class="tt-row"><span class="tt-label">machines:</span> ${connectedMachines.length}</div>`;
     if (connectedMachines.length > 0) {
       html += `<div class="tt-techniques">`;
       connectedMachines.forEach(m => { html += `<span class="tt-tag">${m}</span>`; });
@@ -743,8 +1533,8 @@ nodeElements.on("mouseover", function(event, d) {
         const tid = typeof l.target === "object" ? l.target.id : l.target;
         return tid.replace("machine:", "");
       });
-    ttDetails.innerHTML = `<div class="tt-row"><span class="tt-label">Type:</span> Certification</div>
-      <div class="tt-row"><span class="tt-label">Machines:</span> ${connectedMachines.length} linked</div>`;
+    ttDetails.innerHTML = `<div class="tt-row"><span class="tt-label">type:</span> Certification</div>
+      <div class="tt-row"><span class="tt-label">machines:</span> ${connectedMachines.length} linked</div>`;
   }
 
   tooltip.classList.add("visible");
@@ -787,6 +1577,7 @@ function highlightConnected(d) {
   });
 
   nodeElements.classed("dimmed", n => !connectedIds.has(n.id));
+  nodeElements.classed("lit", n => connectedIds.has(n.id));
   linkElements.classed("dimmed", l => {
     const sid = typeof l.source === "object" ? l.source.id : l.source;
     const tid = typeof l.target === "object" ? l.target.id : l.target;
@@ -805,10 +1596,43 @@ function highlightConnected(d) {
 }
 
 function resetHighlight() {
-  nodeElements.classed("dimmed", false);
+  nodeElements.classed("dimmed", false).classed("lit", false);
   linkElements.classed("dimmed", false).classed("highlighted", false);
   nodeElements.selectAll("circle, rect").attr("filter", null);
 }
+
+// ===========================================================================
+// OWNED (PWNED) STATE — persisted in localStorage
+// ===========================================================================
+const OWNED_KEY = "htb-graph-owned";
+const ownedSet = new Set(JSON.parse(localStorage.getItem(OWNED_KEY) || "[]"));
+
+function saveOwned() {
+  localStorage.setItem(OWNED_KEY, JSON.stringify([...ownedSet]));
+}
+
+function renderOwned() {
+  nodeElements.classed("owned", d => d.type === "machine" && ownedSet.has(d.name));
+  // ✓ flag above owned machine nodes
+  nodeElements.selectAll("text.owned-flag").remove();
+  nodeElements.filter(d => d.type === "machine" && ownedSet.has(d.name))
+    .append("text")
+    .attr("class", "owned-flag")
+    .attr("dy", d => -(d.radius + 6))
+    .text("\u2713");
+  document.getElementById("stat-owned").textContent = ownedSet.size;
+}
+
+nodeElements.on("contextmenu", function(event, d) {
+  if (d.type !== "machine") return;
+  event.preventDefault();
+  if (ownedSet.has(d.name)) ownedSet.delete(d.name);
+  else ownedSet.add(d.name);
+  saveOwned();
+  renderOwned();
+});
+
+renderOwned();
 
 // ===========================================================================
 // TICK
@@ -880,6 +1704,14 @@ function applyFilters() {
     const tid = typeof d.target === "object" ? d.target.id : d.target;
     return (visibleNodeIds.has(sid) && visibleNodeIds.has(tid)) ? null : "none";
   });
+
+  // Live visible-count readout
+  const counts = { machine: 0, technique: 0, certification: 0 };
+  nodes.forEach(n => { if (visibleNodeIds.has(n.id)) counts[n.type]++; });
+  const allVisible = visibleNodeIds.size === nodes.length;
+  document.getElementById("stat-visible").textContent = allVisible
+    ? "all nodes"
+    : counts.machine + "m / " + counts.technique + "t / " + counts.certification + "c";
 }
 
 // Attach filter listeners
@@ -894,19 +1726,37 @@ document.getElementById("search-box").addEventListener("input", applyFilters);
 const sidebar = document.getElementById("sidebar");
 const toggleBtn = document.getElementById("toggle-sidebar");
 const graphContainer = document.getElementById("graph-container");
+const fitBtn = document.getElementById("fit-view");
+const radar = document.getElementById("radar");
+const ticker = document.getElementById("ticker");
+
+function syncChrome() {
+  const collapsed = sidebar.classList.contains("collapsed");
+  toggleBtn.classList.toggle("shifted", collapsed);
+  graphContainer.classList.toggle("expanded", collapsed);
+  fitBtn.classList.toggle("shifted", collapsed);
+  radar.classList.toggle("shifted", collapsed);
+  ticker.classList.toggle("shifted", collapsed);
+  toggleBtn.innerHTML = collapsed ? "&#9654;" : "&#9664;";
+}
 
 toggleBtn.addEventListener("click", () => {
   sidebar.classList.toggle("collapsed");
-  toggleBtn.classList.toggle("shifted");
-  graphContainer.classList.toggle("expanded");
+  syncChrome();
 });
 
+// Mobile: start with sidebar collapsed
+if (window.matchMedia("(max-width: 768px)").matches) {
+  sidebar.classList.add("collapsed");
+  syncChrome();
+}
+
 // ===========================================================================
-// INITIAL ZOOM TO FIT
+// ZOOM TO FIT
 // ===========================================================================
-simulation.on("end", () => {
-  // Once simulation settles, zoom to fit
+function zoomToFit() {
   const bounds = g.node().getBBox();
+  if (!bounds.width || !bounds.height) return;
   const dx = bounds.width;
   const dy = bounds.height;
   const cx = bounds.x + dx / 2;
@@ -920,7 +1770,85 @@ simulation.on("end", () => {
     zoom.transform,
     d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
   );
+}
+
+simulation.on("end", zoomToFit);
+fitBtn.addEventListener("click", zoomToFit);
+
+// ===========================================================================
+// KEYBOARD SHORTCUTS
+// ===========================================================================
+document.addEventListener("keydown", e => {
+  const input = document.getElementById("search-box");
+  if (e.key === "/" && document.activeElement !== input) {
+    e.preventDefault();
+    if (sidebar.classList.contains("collapsed")) {
+      sidebar.classList.remove("collapsed");
+      syncChrome();
+    }
+    input.focus();
+    input.select();
+  }
+  if (e.key === "Escape") {
+    if (document.activeElement === input && input.value) {
+      input.value = "";
+      applyFilters();
+    } else {
+      input.blur();
+    }
+  }
 });
+
+// ===========================================================================
+// ASCII DRIFT — ambient binary flow behind the graph
+// ===========================================================================
+(function initDrift() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const canvas = document.getElementById("drift");
+  const ctx = canvas.getContext("2d");
+  let w = 0, h = 0;
+  let drops = [];
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    w = canvas.clientWidth;
+    h = canvas.clientHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const cols = Math.max(10, Math.floor(w / 110));
+    drops = Array.from({ length: cols }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      v: 0.2 + Math.random() * 0.55,
+      s: 9 + Math.random() * 4
+    }));
+  }
+
+  let running = true;
+  function frame() {
+    if (!running) return;
+    ctx.clearRect(0, 0, w, h);
+    drops.forEach(d => {
+      ctx.font = d.s + "px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "rgba(159, 239, 0, 0.05)";
+      ctx.fillText(Math.random() < 0.5 ? "0" : "1", d.x, d.y);
+      d.y += d.v;
+      if (d.y > h + 20) { d.y = -20; d.x = Math.random() * w; }
+    });
+    requestAnimationFrame(frame);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    const was = running;
+    running = !document.hidden;
+    if (running && !was) frame();
+  });
+
+  window.addEventListener("resize", resize);
+  resize();
+  frame();
+})();
 
 // ===========================================================================
 // WINDOW RESIZE

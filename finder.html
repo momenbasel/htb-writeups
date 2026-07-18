@@ -10,99 +10,327 @@ permalink: /finder/
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTB Machine Finder - Interactive Search & Filter</title>
     <meta name="description" content="Find the perfect Hack The Box machine for your skill level. Filter by difficulty, OS, technique, and certification relevance.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #0a0e17;
-            --bg2: #141d2b;
-            --bg3: #1a2332;
-            --border: #2a3a4e;
-            --text: #a4b1cd;
-            --text-bright: #d4dae5;
+            --topbar-h: 60px;
+            --bg: #050810;
+            --bg2: #0c1220;
+            --bg3: #111a2b;
+            --bg4: #16213a;
+            --border: #1a2540;
+            --border-bright: #2a3a5e;
+            --text: #8d9cb8;
+            --text-dim: #55637f;
+            --text-bright: #dbe4f0;
             --green: #9fef00;
-            --green-dim: rgba(159, 239, 0, 0.15);
+            --green-glow: rgba(159, 239, 0, 0.45);
+            --green-dim: rgba(159, 239, 0, 0.12);
             --easy: #4ade80;
             --medium: #fb923c;
             --hard: #ef4444;
             --insane: #a855f7;
+            --amber: #fbbf24;
+            --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
+        html { scrollbar-color: var(--border-bright) var(--bg); }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
+            font-family: var(--sans);
+            background:
+                radial-gradient(1200px 600px at 80% -10%, rgba(159, 239, 0, 0.04), transparent 60%),
+                radial-gradient(900px 500px at 10% 110%, rgba(56, 130, 246, 0.05), transparent 60%),
+                var(--bg);
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        /* Header */
-        .header {
-            background: var(--bg2);
+        /* ===== CRT scanline overlay ===== */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.16) 0px,
+                rgba(0, 0, 0, 0.16) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            opacity: 0.55;
+            animation: scan-drift 9s linear infinite;
+        }
+        @keyframes scan-drift {
+            from { background-position: 0 0; }
+            to   { background-position: 0 60px; }
+        }
+
+        ::selection { background: rgba(159, 239, 0, 0.25); color: #fff; }
+
+        /* ===== Logo cube ===== */
+        .logo-cube { display: block; flex-shrink: 0; }
+        .logo-cube .face {
+            stroke: var(--green);
+            stroke-width: 3;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 5px var(--green-glow));
+            stroke-dasharray: 400;
+            stroke-dashoffset: 400;
+            animation: cube-draw 1s ease forwards, cube-fill 0.7s ease 0.55s forwards;
+            fill-opacity: 0;
+        }
+        .logo-cube .face.top   { fill: rgba(159, 239, 0, 0.30); }
+        .logo-cube .face.left  { fill: rgba(159, 239, 0, 0.16); animation-delay: 0.15s, 0.7s; }
+        .logo-cube .face.right { fill: rgba(159, 239, 0, 0.06); animation-delay: 0.3s, 0.85s; }
+        @keyframes cube-draw { to { stroke-dashoffset: 0; } }
+        @keyframes cube-fill { to { fill-opacity: 1; } }
+
+        /* ===== Top bar ===== */
+        .topbar {
+            height: var(--topbar-h);
+            background: rgba(12, 18, 32, 0.92);
+            backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
+            padding: 0 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 1rem;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .header h1 {
-            font-size: 1.3rem;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+
+        .led {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green-glow), 0 0 14px var(--green-glow);
+            animation: led-pulse 1.6s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        @keyframes led-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.25;
+            min-width: 0;
+        }
+
+        .brand-title {
+            font-family: var(--mono);
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
             color: var(--green);
-            font-weight: 800;
+            text-shadow: 0 0 10px var(--green-glow);
+            white-space: nowrap;
         }
 
-        .header h1 span {
-            color: var(--text-bright);
-            font-weight: 400;
+        .brand-sub {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .header-links a {
+        .cursor {
+            display: inline-block;
+            width: 7px;
+            height: 11px;
+            margin-left: 3px;
+            background: var(--green);
+            vertical-align: -1px;
+            animation: blink 1.1s steps(1) infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .topnav {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        .topnav a {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             color: var(--text);
             text-decoration: none;
-            margin-left: 1.5rem;
-            font-size: 0.85rem;
-            transition: color 0.2s;
+            padding: 0.35rem 0.65rem;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
         }
 
-        .header-links a:hover { color: var(--green); }
+        .topnav a:hover {
+            color: var(--green);
+            border-color: var(--border-bright);
+            background: var(--green-dim);
+        }
 
-        /* Layout */
-        .container {
-            max-width: 1400px;
+        .topnav a.active {
+            color: var(--green);
+            border-color: rgba(159, 239, 0, 0.4);
+            background: var(--green-dim);
+        }
+
+        /* ===== Layout ===== */
+        .shell {
+            max-width: 1440px;
             margin: 0 auto;
-            padding: 1.5rem 2rem;
+            padding: 1.5rem 1.5rem 4rem;
         }
 
-        /* Stats bar */
-        .stats-bar {
+        /* ===== Readout (stats) ===== */
+        .readout {
             display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            align-items: stretch;
+            gap: 1rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
         }
 
-        .stat-pill {
-            background: var(--bg3);
+        .readout-cell {
+            background: var(--bg2);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 0.4rem 1rem;
-            font-size: 0.85rem;
+            border-radius: 6px;
+            padding: 0.6rem 0.9rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 86px;
+            transition: border-color 0.15s ease;
         }
 
-        .stat-pill strong {
+        .readout-cell:hover { border-color: var(--border-bright); }
+
+        .readout-cell .k {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .readout-cell .v {
+            font-family: var(--mono);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            line-height: 1.3;
+        }
+
+        .readout-cell .v em {
+            font-style: normal;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        .readout-cell.accent .v {
             color: var(--green);
+            text-shadow: 0 0 10px var(--green-glow);
         }
 
-        /* Controls */
-        .controls {
+        .dist-cell {
+            flex: 1 1 220px;
+            min-width: 200px;
+        }
+
+        .dist-bar {
+            display: flex;
+            height: 10px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.45rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+
+        .dist-bar span {
+            display: block;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .dist-bar .d-easy   { background: var(--easy); }
+        .dist-bar .d-medium { background: var(--medium); }
+        .dist-bar .d-hard   { background: var(--hard); }
+        .dist-bar .d-insane { background: var(--insane); }
+
+        .dist-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 0.9rem;
+            margin-top: 0.35rem;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+        }
+
+        .dist-legend i {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 2px;
+            margin-right: 4px;
+            vertical-align: 0;
+        }
+
+        /* ===== Filter console ===== */
+        .console {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem 1.1rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .console::before {
+            content: "FILTER CONSOLE";
+            position: absolute;
+            top: -8px;
+            left: 14px;
+            padding: 0 6px;
+            background: var(--bg);
+            font-family: var(--mono);
+            font-size: 0.58rem;
+            letter-spacing: 0.22em;
+            color: var(--text-dim);
+        }
+
+        .console-head {
             display: grid;
             grid-template-columns: 1fr auto;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 0.75rem;
+            margin-bottom: 0.9rem;
         }
 
         .search-box {
@@ -111,450 +339,802 @@ permalink: /finder/
 
         .search-box input {
             width: 100%;
-            background: var(--bg3);
+            background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border-radius: 6px;
+            padding: 0.7rem 4.2rem 0.7rem 2.4rem;
             color: var(--text-bright);
-            font-size: 1rem;
+            font-family: var(--mono);
+            font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            caret-color: var(--green);
         }
 
         .search-box input:focus {
-            border-color: var(--green);
+            border-color: rgba(159, 239, 0, 0.55);
+            box-shadow: 0 0 0 3px rgba(159, 239, 0, 0.12), 0 0 18px rgba(159, 239, 0, 0.08);
         }
 
-        .search-box input::placeholder {
-            color: rgba(164, 177, 205, 0.5);
-        }
+        .search-box input::placeholder { color: var(--text-dim); }
 
         .search-box::before {
             content: ">";
             position: absolute;
-            left: 1rem;
+            left: 0.95rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--green);
-            font-family: monospace;
-            font-weight: bold;
+            font-family: var(--mono);
+            font-weight: 700;
+            text-shadow: 0 0 8px var(--green-glow);
+        }
+
+        .search-hint {
+            position: absolute;
+            right: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 0.35rem;
+            pointer-events: none;
+        }
+
+        kbd {
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            color: var(--text-dim);
+            background: var(--bg3);
+            border: 1px solid var(--border-bright);
+            border-bottom-width: 2px;
+            border-radius: 4px;
+            padding: 1px 6px;
         }
 
         .view-toggle {
             display: flex;
-            gap: 0;
         }
 
         .view-toggle button {
-            background: var(--bg3);
+            background: var(--bg);
             border: 1px solid var(--border);
-            color: var(--text);
-            padding: 0.75rem 1rem;
+            color: var(--text-dim);
+            padding: 0 1rem;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.85rem;
+            transition: all 0.15s ease;
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
         }
 
-        .view-toggle button:first-child { border-radius: 8px 0 0 8px; }
-        .view-toggle button:last-child { border-radius: 0 8px 8px 0; }
+        .view-toggle button svg { width: 13px; height: 13px; }
+
+        .view-toggle button:first-child { border-radius: 6px 0 0 6px; }
+        .view-toggle button:last-child { border-radius: 0 6px 6px 0; border-left: none; }
+
+        .view-toggle button:hover { color: var(--text-bright); }
+
         .view-toggle button.active {
-            background: rgba(159, 239, 0, 0.1);
-            border-color: var(--green);
+            background: var(--green-dim);
+            border-color: rgba(159, 239, 0, 0.5);
             color: var(--green);
+            position: relative;
+            z-index: 1;
         }
 
-        /* Filters */
+        /* Filter rows */
         .filters {
             display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 0.6rem 1.5rem;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .filter-group {
             display: flex;
             gap: 0.35rem;
             align-items: center;
+            flex-wrap: wrap;
         }
 
-        .filter-group label {
-            font-size: 0.75rem;
+        .filter-group > label {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: rgba(164, 177, 205, 0.6);
-            margin-right: 0.25rem;
+            color: var(--text-dim);
+            margin-right: 0.35rem;
         }
 
         .filter-btn {
             background: var(--bg3);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            padding: 0.28rem 0.7rem;
             color: var(--text);
-            font-size: 0.8rem;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.03em;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.15s ease;
             user-select: none;
+            position: relative;
         }
 
         .filter-btn:hover {
-            border-color: var(--green);
+            border-color: var(--border-bright);
+            color: var(--text-bright);
         }
 
         .filter-btn.active {
-            background: rgba(159, 239, 0, 0.1);
+            background: var(--green-dim);
+            border-color: rgba(159, 239, 0, 0.55);
+            color: var(--green);
+        }
+
+        .filter-btn.easy.active   { border-color: var(--easy);   color: var(--easy);   background: rgba(74, 222, 128, 0.1); }
+        .filter-btn.medium.active { border-color: var(--medium); color: var(--medium); background: rgba(251, 146, 60, 0.1); }
+        .filter-btn.hard.active   { border-color: var(--hard);   color: var(--hard);   background: rgba(239, 68, 68, 0.1); }
+        .filter-btn.insane.active { border-color: var(--insane); color: var(--insane); background: rgba(168, 85, 247, 0.1); }
+
+        .filter-btn:not(.active) { opacity: 0.55; }
+        .filter-btn:not(.active):hover { opacity: 1; }
+
+        .filter-sep {
+            width: 1px;
+            height: 22px;
+            background: var(--border);
+        }
+
+        /* Technique drawer */
+        .drawer-toggle {
+            margin-top: 0.85rem;
+            background: none;
+            border: 1px dashed var(--border-bright);
+            border-radius: 4px;
+            padding: 0.4rem 0.8rem;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .drawer-toggle:hover {
             border-color: var(--green);
             color: var(--green);
         }
 
-        .filter-btn.easy.active { border-color: var(--easy); color: var(--easy); background: rgba(74, 222, 128, 0.1); }
-        .filter-btn.medium.active { border-color: var(--medium); color: var(--medium); background: rgba(251, 146, 60, 0.1); }
-        .filter-btn.hard.active { border-color: var(--hard); color: var(--hard); background: rgba(239, 68, 68, 0.1); }
-        .filter-btn.insane.active { border-color: var(--insane); color: var(--insane); background: rgba(168, 85, 247, 0.1); }
-
-        .filter-sep {
-            width: 1px;
-            height: 24px;
-            background: var(--border);
-            margin: 0 0.5rem;
+        .drawer-toggle .chev {
+            display: inline-block;
+            transition: transform 0.25s ease;
+            font-size: 0.6rem;
         }
 
-        /* Technique tags filter */
+        .drawer-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+
+        .drawer-toggle .count-badge {
+            background: var(--green-dim);
+            border: 1px solid rgba(159, 239, 0, 0.4);
+            color: var(--green);
+            border-radius: 3px;
+            padding: 0 5px;
+            font-size: 0.62rem;
+        }
+
         .technique-filters {
             display: flex;
             gap: 0.35rem;
             flex-wrap: wrap;
-            margin-bottom: 1.5rem;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.35s ease, margin-top 0.35s ease;
         }
 
         .technique-filters.expanded {
-            max-height: 500px;
+            max-height: 600px;
+            margin-top: 0.75rem;
+            overflow-y: auto;
         }
 
-        .expand-techniques {
+        /* Active filter chips */
+        .active-chips {
+            display: none;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 0.85rem;
+            padding-top: 0.85rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .active-chips.visible { display: flex; }
+
+        .active-chips .chips-label {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.18em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg3);
+            border: 1px solid var(--border-bright);
+            border-radius: 4px;
+            padding: 0.2rem 0.3rem 0.2rem 0.6rem;
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            color: var(--text-bright);
+        }
+
+        .chip button {
             background: none;
-            border: 1px dashed var(--border);
-            border-radius: 6px;
-            padding: 0.4rem 0.8rem;
-            color: var(--text);
-            font-size: 0.8rem;
+            border: none;
+            color: var(--text-dim);
             cursor: pointer;
-            margin-bottom: 1rem;
-            transition: all 0.15s;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            padding: 0 4px;
+            border-radius: 3px;
+            line-height: 1.4;
+            transition: all 0.15s ease;
         }
 
-        .expand-techniques:hover {
-            border-color: var(--green);
-            color: var(--green);
+        .chip button:hover { color: var(--hard); background: rgba(239, 68, 68, 0.12); }
+
+        .clear-all {
+            background: none;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: var(--hard);
+            border-radius: 4px;
+            padding: 0.24rem 0.65rem;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
 
-        /* Results count */
-        .results-info {
+        .clear-all:hover { background: rgba(239, 68, 68, 0.12); }
+
+        /* ===== Results line ===== */
+        .results-line {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            color: rgba(164, 177, 205, 0.6);
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            flex-wrap: wrap;
         }
 
-        .results-info strong {
+        .results-line strong {
             color: var(--green);
+            text-shadow: 0 0 8px var(--green-glow);
+            font-weight: 700;
         }
 
-        /* Table view */
+        /* ===== Table view ===== */
+        .table-scroll {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: auto;
+            background: var(--bg2);
+        }
+
         .table-view {
             width: 100%;
+            min-width: 860px;
             border-collapse: separate;
             border-spacing: 0;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border);
         }
 
         .table-view thead th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
             background: var(--bg3);
-            padding: 0.7rem 1rem;
+            padding: 0.65rem 1rem;
             text-align: left;
-            font-size: 0.75rem;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: rgba(164, 177, 205, 0.7);
-            border-bottom: 1px solid var(--border);
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--border-bright);
             cursor: pointer;
             user-select: none;
-            transition: color 0.15s;
+            transition: color 0.15s ease;
             white-space: nowrap;
         }
 
-        .table-view thead th:hover {
-            color: var(--green);
-        }
+        .table-view thead th:hover { color: var(--green); }
 
-        .table-view thead th.sorted {
-            color: var(--green);
-        }
+        .table-view thead th.sorted { color: var(--green); }
+
+        .table-view thead th.no-sort { cursor: default; }
+        .table-view thead th.no-sort:hover { color: var(--text-dim); }
 
         .table-view tbody tr {
-            transition: background 0.1s;
+            transition: background 0.12s ease, box-shadow 0.12s ease;
         }
+
+        .table-view tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.014); }
 
         .table-view tbody tr:hover {
-            background: rgba(159, 239, 0, 0.03);
+            background: rgba(159, 239, 0, 0.045);
         }
+
+        .table-view tbody tr.row-easy   { box-shadow: inset 2px 0 0 rgba(74, 222, 128, 0.45); }
+        .table-view tbody tr.row-medium { box-shadow: inset 2px 0 0 rgba(251, 146, 60, 0.45); }
+        .table-view tbody tr.row-hard   { box-shadow: inset 2px 0 0 rgba(239, 68, 68, 0.45); }
+        .table-view tbody tr.row-insane { box-shadow: inset 2px 0 0 rgba(168, 85, 247, 0.45); }
+
+        .table-view tbody tr.row-easy:hover   { box-shadow: inset 3px 0 0 var(--easy); }
+        .table-view tbody tr.row-medium:hover { box-shadow: inset 3px 0 0 var(--medium); }
+        .table-view tbody tr.row-hard:hover   { box-shadow: inset 3px 0 0 var(--hard); }
+        .table-view tbody tr.row-insane:hover { box-shadow: inset 3px 0 0 var(--insane); }
 
         .table-view td {
-            padding: 0.6rem 1rem;
-            border-bottom: 1px solid rgba(42, 58, 78, 0.5);
-            font-size: 0.9rem;
+            padding: 0.55rem 1rem;
+            border-bottom: 1px solid rgba(26, 37, 64, 0.6);
+            font-size: 0.86rem;
+            vertical-align: top;
         }
 
-        .table-view td a {
+        .table-view tbody tr:last-child td { border-bottom: none; }
+
+        .td-idx {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            width: 3.2rem;
+            padding-right: 0 !important;
+            text-align: right;
+        }
+
+        .td-pwn {
+            width: 2.2rem;
+            padding-right: 0.2rem !important;
+            text-align: center;
+        }
+
+        .td-name a {
             color: var(--text-bright);
             text-decoration: none;
+            font-family: var(--mono);
             font-weight: 600;
-            transition: color 0.15s;
+            font-size: 0.88rem;
+            transition: color 0.15s ease, text-shadow 0.15s ease;
         }
 
-        .table-view td a:hover {
+        .td-name a:hover {
             color: var(--green);
+            text-shadow: 0 0 8px var(--green-glow);
         }
 
-        /* Difficulty dot */
-        .diff-dot {
+        .td-os, .td-year {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .diff-cell {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .diff-cell .dot {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            margin-right: 0.4rem;
-            vertical-align: middle;
+            margin-right: 0.45rem;
+            vertical-align: 1px;
         }
 
-        .diff-dot.easy { background: var(--easy); }
-        .diff-dot.medium { background: var(--medium); }
-        .diff-dot.hard { background: var(--hard); }
-        .diff-dot.insane { background: var(--insane); }
+        .diff-cell.easy   { color: var(--easy); }
+        .diff-cell.medium { color: var(--medium); }
+        .diff-cell.hard   { color: var(--hard); }
+        .diff-cell.insane { color: var(--insane); }
+        .diff-cell.easy .dot   { background: var(--easy);   box-shadow: 0 0 6px rgba(74, 222, 128, 0.6); }
+        .diff-cell.medium .dot { background: var(--medium); box-shadow: 0 0 6px rgba(251, 146, 60, 0.6); }
+        .diff-cell.hard .dot   { background: var(--hard);   box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
+        .diff-cell.insane .dot { background: var(--insane); box-shadow: 0 0 6px rgba(168, 85, 247, 0.6); }
 
-        /* Technique tags */
         .tech-tag {
             display: inline-block;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            background: rgba(159, 239, 0, 0.08);
-            border: 1px solid rgba(159, 239, 0, 0.15);
+            padding: 1px 7px;
+            border-radius: 3px;
+            font-family: var(--mono);
+            font-size: 0.66rem;
+            background: rgba(159, 239, 0, 0.06);
+            border: 1px solid rgba(159, 239, 0, 0.16);
             color: var(--green);
             margin: 1px 2px;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.15s ease;
         }
 
         .tech-tag:hover {
-            background: rgba(159, 239, 0, 0.15);
-            border-color: rgba(159, 239, 0, 0.3);
+            background: rgba(159, 239, 0, 0.16);
+            border-color: rgba(159, 239, 0, 0.45);
+            box-shadow: 0 0 10px rgba(159, 239, 0, 0.12);
         }
 
-        /* Card view */
+        .cert-badge {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            color: var(--amber);
+            margin: 1px 2px;
+        }
+
+        .writeup-link {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .writeup-link:hover { color: var(--green); }
+        .writeup-link.none { cursor: default; }
+
+        .sort-arrow {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 0.55rem;
+        }
+
+        /* ===== Card view ===== */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1rem;
+            gap: 0.9rem;
         }
 
         .machine-card {
-            background: var(--bg3);
+            background: var(--bg2);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.25rem;
-            transition: border-color 0.2s, transform 0.2s;
+            border-left: 3px solid var(--border-bright);
+            border-radius: 6px;
+            padding: 1rem 1.15rem;
+            transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
             cursor: pointer;
+            position: relative;
         }
 
+        .machine-card.card-easy   { border-left-color: var(--easy); }
+        .machine-card.card-medium { border-left-color: var(--medium); }
+        .machine-card.card-hard   { border-left-color: var(--hard); }
+        .machine-card.card-insane { border-left-color: var(--insane); }
+
         .machine-card:hover {
-            border-color: var(--green);
+            border-color: var(--border-bright);
             transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
         }
+
+        .machine-card.card-easy:hover   { border-left-color: var(--easy);   box-shadow: 0 6px 24px rgba(0,0,0,0.45), 0 0 18px rgba(74, 222, 128, 0.08); }
+        .machine-card.card-medium:hover { border-left-color: var(--medium); box-shadow: 0 6px 24px rgba(0,0,0,0.45), 0 0 18px rgba(251, 146, 60, 0.08); }
+        .machine-card.card-hard:hover   { border-left-color: var(--hard);   box-shadow: 0 6px 24px rgba(0,0,0,0.45), 0 0 18px rgba(239, 68, 68, 0.08); }
+        .machine-card.card-insane:hover { border-left-color: var(--insane); box-shadow: 0 6px 24px rgba(0,0,0,0.45), 0 0 18px rgba(168, 85, 247, 0.08); }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 0.75rem;
+            gap: 0.75rem;
+            margin-bottom: 0.4rem;
         }
 
         .card-name {
-            font-size: 1.1rem;
+            font-family: var(--mono);
+            font-size: 1rem;
             font-weight: 700;
             color: var(--text-bright);
         }
 
+        .machine-card:hover .card-name { color: var(--green); }
+
         .card-diff {
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 10px;
+            font-family: var(--mono);
+            font-size: 0.58rem;
+            padding: 2px 7px;
+            border-radius: 3px;
             font-weight: 600;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
+            flex-shrink: 0;
         }
 
-        .card-diff.easy { background: rgba(74, 222, 128, 0.15); color: var(--easy); }
-        .card-diff.medium { background: rgba(251, 146, 60, 0.15); color: var(--medium); }
-        .card-diff.hard { background: rgba(239, 68, 68, 0.15); color: var(--hard); }
-        .card-diff.insane { background: rgba(168, 85, 247, 0.15); color: var(--insane); }
+        .card-diff.easy   { background: rgba(74, 222, 128, 0.12);  color: var(--easy);   border: 1px solid rgba(74, 222, 128, 0.3); }
+        .card-diff.medium { background: rgba(251, 146, 60, 0.12);  color: var(--medium); border: 1px solid rgba(251, 146, 60, 0.3); }
+        .card-diff.hard   { background: rgba(239, 68, 68, 0.12);   color: var(--hard);   border: 1px solid rgba(239, 68, 68, 0.3); }
+        .card-diff.insane { background: rgba(168, 85, 247, 0.12);  color: var(--insane); border: 1px solid rgba(168, 85, 247, 0.3); }
 
         .card-meta {
-            font-size: 0.8rem;
-            color: rgba(164, 177, 205, 0.6);
-            margin-bottom: 0.75rem;
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            margin-bottom: 0.7rem;
+            letter-spacing: 0.04em;
         }
 
         .card-techniques {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 3px;
         }
 
-        .card-links {
+        .card-footer {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
             gap: 0.75rem;
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid rgba(42, 58, 78, 0.5);
+            margin-top: 0.8rem;
+            padding-top: 0.7rem;
+            border-top: 1px solid rgba(26, 37, 64, 0.8);
         }
 
-        .card-links a {
-            color: var(--green);
-            text-decoration: none;
-            font-size: 0.8rem;
-            transition: opacity 0.15s;
-        }
-
-        .card-links a:hover {
-            opacity: 0.8;
-        }
-
-        /* Cert badges */
-        .cert-badge {
-            display: inline-block;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            background: rgba(251, 191, 36, 0.1);
-            border: 1px solid rgba(251, 191, 36, 0.2);
-            color: #fbbf24;
-            margin: 1px 2px;
-        }
-
-        /* Empty state */
+        /* ===== Empty state ===== */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            color: rgba(164, 177, 205, 0.5);
+            border: 1px dashed var(--border-bright);
+            border-radius: 8px;
+            color: var(--text-dim);
+            font-family: var(--mono);
+        }
+
+        .empty-state .sig {
+            color: var(--hard);
+            font-size: 1.6rem;
+            display: block;
+            margin-bottom: 0.75rem;
         }
 
         .empty-state h3 {
             color: var(--text);
-            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.4rem;
         }
 
-        /* Sort indicator */
-        .sort-arrow {
-            display: inline-block;
-            margin-left: 4px;
-            font-size: 0.6rem;
+        .empty-state p { font-size: 0.75rem; }
+
+        /* ===== Pwned state ===== */
+        .pwn-toggle {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid var(--border-bright);
+            background: var(--bg);
+            cursor: pointer;
+            position: relative;
+            padding: 0;
+            flex-shrink: 0;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header { padding: 1rem; }
-            .container { padding: 1rem; }
-            .controls { grid-template-columns: 1fr; }
+        .pwn-toggle:hover { border-color: rgba(159, 239, 0, 0.6); }
+
+        .pwn-toggle::after {
+            content: "";
+            position: absolute;
+            inset: 3px;
+            border-radius: 50%;
+            background: transparent;
+            transition: background 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .pwn-toggle.on {
+            border-color: rgba(159, 239, 0, 0.7);
+            box-shadow: 0 0 8px rgba(159, 239, 0, 0.25);
+        }
+
+        .pwn-toggle.on::after {
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green-glow);
+        }
+
+        .table-view tbody tr.row-owned .td-name a {
+            text-decoration: line-through;
+            opacity: 0.45;
+        }
+
+        .table-view tbody tr.row-owned .diff-cell,
+        .table-view tbody tr.row-owned .td-os,
+        .table-view tbody tr.row-owned .td-year { opacity: 0.5; }
+
+        .machine-card.card-owned .card-name {
+            text-decoration: line-through;
+            opacity: 0.45;
+        }
+
+        .machine-card.card-owned { opacity: 0.65; }
+        .machine-card.card-owned:hover { opacity: 1; }
+
+        .card-pwn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        /* ===== Focus visibility ===== */
+        button:focus-visible, a:focus-visible, input:focus-visible {
+            outline: 2px solid rgba(159, 239, 0, 0.6);
+            outline-offset: 2px;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 860px) {
+            .brand-sub { display: none; }
+            .console-head { grid-template-columns: 1fr; }
+            .view-toggle button { flex: 1; justify-content: center; padding: 0.6rem 1rem; }
+        }
+
+        @media (max-width: 640px) {
+            .topbar { padding: 0 1rem; }
+            .shell { padding: 1rem 1rem 3rem; }
+            .topnav a:not(.active) { display: none; }
             .card-grid { grid-template-columns: 1fr; }
-            .stats-bar { gap: 0.5rem; }
-            .header-links { display: none; }
+            .search-hint { display: none; }
+            .search-box input { padding-right: 1rem; }
+            .readout-cell { min-width: 72px; padding: 0.5rem 0.7rem; }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        /* ===== Scrollbars ===== */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(159, 239, 0, 0.3); }
+        ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(159, 239, 0, 0.35); }
+
+        /* ===== Reduced motion ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .scanlines, .led, .cursor, .logo-cube .face { animation: none; }
+            .logo-cube .face { stroke-dashoffset: 0; fill-opacity: 1; }
+            * { transition-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>HTB <span>Machine Finder</span></h1>
-        <div class="header-links">
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <div class="brand">
+            <svg class="logo-cube" viewBox="0 0 100 100" width="30" height="30" aria-hidden="true">
+                <polygon class="face top" points="50,6 88,28 50,50 12,28"/>
+                <polygon class="face left" points="12,28 50,50 50,94 12,72"/>
+                <polygon class="face right" points="88,28 88,72 50,94 50,50"/>
+            </svg>
+            <div class="led" aria-hidden="true"></div>
+            <div class="brand-text">
+                <span class="brand-title">HTB//MACHINE_FINDER</span>
+                <span class="brand-sub">root@htb:~$ ./finder --all --verbose<span class="cursor" aria-hidden="true"></span></span>
+            </div>
+        </div>
+        <nav class="topnav">
             <a href="/htb-writeups/">Home</a>
-            <a href="/htb-writeups/graph/">Knowledge Graph</a>
-            <a href="/htb-writeups/attack-paths/">Attack Paths</a>
-            <a href="/htb-writeups/skill-trees/">Skill Trees</a>
+            <a href="/htb-writeups/finder/" class="active">Finder</a>
+            <a href="/htb-writeups/graph/">Graph</a>
+            <a href="/htb-writeups/attack-paths/">Paths</a>
+            <a href="/htb-writeups/skill-trees/">Skills</a>
             <a href="https://github.com/momenbasel/htb-writeups">GitHub</a>
-        </div>
-    </div>
+        </nav>
+    </header>
 
-    <div class="container">
-        <div class="stats-bar" id="statsBar"></div>
+    <main class="shell">
+        <section class="readout" id="statsBar" aria-label="Dataset statistics"></section>
 
-        <div class="controls">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search machines by name, technique, or CVE..." autofocus>
+        <section class="console">
+            <div class="console-head">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="search: name, technique, CVE, cert..." autofocus aria-label="Search machines">
+                    <span class="search-hint" aria-hidden="true"><kbd>/</kbd><kbd>esc</kbd></span>
+                </div>
+                <div class="view-toggle" role="group" aria-label="View mode">
+                    <button class="active" onclick="setView('table')" id="btnTable" aria-pressed="true">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3h14M1 8h14M1 13h14"/></svg>
+                        Table
+                    </button>
+                    <button onclick="setView('cards')" id="btnCards" aria-pressed="false">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+                        Cards
+                    </button>
+                </div>
             </div>
-            <div class="view-toggle">
-                <button class="active" onclick="setView('table')" id="btnTable">Table</button>
-                <button onclick="setView('cards')" id="btnCards">Cards</button>
-            </div>
-        </div>
 
-        <div class="filters">
-            <div class="filter-group">
-                <label>Difficulty</label>
-                <button class="filter-btn easy active" data-filter="difficulty" data-value="Easy" onclick="toggleFilter(this)">Easy</button>
-                <button class="filter-btn medium active" data-filter="difficulty" data-value="Medium" onclick="toggleFilter(this)">Medium</button>
-                <button class="filter-btn hard active" data-filter="difficulty" data-value="Hard" onclick="toggleFilter(this)">Hard</button>
-                <button class="filter-btn insane active" data-filter="difficulty" data-value="Insane" onclick="toggleFilter(this)">Insane</button>
+            <div class="filters" id="filterBar">
+                <div class="filter-group" role="group" aria-label="Difficulty filter">
+                    <label>diff</label>
+                    <button class="filter-btn easy active" data-filter="difficulty" data-value="Easy" onclick="toggleFilter(this)" aria-pressed="true">easy</button>
+                    <button class="filter-btn medium active" data-filter="difficulty" data-value="Medium" onclick="toggleFilter(this)" aria-pressed="true">medium</button>
+                    <button class="filter-btn hard active" data-filter="difficulty" data-value="Hard" onclick="toggleFilter(this)" aria-pressed="true">hard</button>
+                    <button class="filter-btn insane active" data-filter="difficulty" data-value="Insane" onclick="toggleFilter(this)" aria-pressed="true">insane</button>
+                </div>
+                <div class="filter-sep" aria-hidden="true"></div>
+                <div class="filter-group" role="group" aria-label="OS filter">
+                    <label>os</label>
+                    <button class="filter-btn active" data-filter="os" data-value="Linux" onclick="toggleFilter(this)" aria-pressed="true">linux</button>
+                    <button class="filter-btn active" data-filter="os" data-value="Windows" onclick="toggleFilter(this)" aria-pressed="true">windows</button>
+                    <button class="filter-btn active" data-filter="os" data-value="Other" onclick="toggleFilter(this)" aria-pressed="true">other</button>
+                </div>
+                <div class="filter-sep" aria-hidden="true"></div>
+                <div class="filter-group" role="group" aria-label="Certification filter">
+                    <label>cert</label>
+                    <button class="filter-btn" data-filter="cert" data-value="OSCP" onclick="toggleFilter(this)" aria-pressed="false">OSCP</button>
+                    <button class="filter-btn" data-filter="cert" data-value="CPTS" onclick="toggleFilter(this)" aria-pressed="false">CPTS</button>
+                    <button class="filter-btn" data-filter="cert" data-value="CRTO" onclick="toggleFilter(this)" aria-pressed="false">CRTO</button>
+                    <button class="filter-btn" data-filter="cert" data-value="CRTE" onclick="toggleFilter(this)" aria-pressed="false">CRTE</button>
+                    <button class="filter-btn" data-filter="cert" data-value="eWPT" onclick="toggleFilter(this)" aria-pressed="false">eWPT</button>
+                </div>
+                <div class="filter-sep" aria-hidden="true"></div>
+                <div class="filter-group" role="group" aria-label="Pwned state filter">
+                    <label>state</label>
+                    <button class="filter-btn active" data-filter="state" data-value="pwned" onclick="toggleFilter(this)" aria-pressed="true">pwned</button>
+                    <button class="filter-btn active" data-filter="state" data-value="unpwned" onclick="toggleFilter(this)" aria-pressed="true">unpwned</button>
+                </div>
             </div>
-            <div class="filter-sep"></div>
-            <div class="filter-group">
-                <label>OS</label>
-                <button class="filter-btn active" data-filter="os" data-value="Linux" onclick="toggleFilter(this)">Linux</button>
-                <button class="filter-btn active" data-filter="os" data-value="Windows" onclick="toggleFilter(this)">Windows</button>
-                <button class="filter-btn active" data-filter="os" data-value="Other" onclick="toggleFilter(this)">Other</button>
-            </div>
-            <div class="filter-sep"></div>
-            <div class="filter-group">
-                <label>Cert</label>
-                <button class="filter-btn" data-filter="cert" data-value="OSCP" onclick="toggleFilter(this)">OSCP</button>
-                <button class="filter-btn" data-filter="cert" data-value="CPTS" onclick="toggleFilter(this)">CPTS</button>
-                <button class="filter-btn" data-filter="cert" data-value="CRTO" onclick="toggleFilter(this)">CRTO</button>
-                <button class="filter-btn" data-filter="cert" data-value="CRTE" onclick="toggleFilter(this)">CRTE</button>
-                <button class="filter-btn" data-filter="cert" data-value="eWPT" onclick="toggleFilter(this)">eWPT</button>
-            </div>
-        </div>
 
-        <button class="expand-techniques" onclick="toggleTechniques()">
-            Filter by technique...
-        </button>
-        <div class="technique-filters" id="techFilters"></div>
+            <button class="drawer-toggle" onclick="toggleTechniques()" id="drawerToggle" aria-expanded="false" aria-controls="techFilters">
+                <span class="chev">&#9654;</span> techniques <span class="count-badge" id="techCount" hidden>0</span>
+            </button>
+            <div class="technique-filters" id="techFilters"></div>
 
-        <div class="results-info">
-            <span>Showing <strong id="resultCount">0</strong> machines</span>
+            <div class="active-chips" id="activeChips">
+                <span class="chips-label">active:</span>
+                <span id="chipsHost" style="display:contents"></span>
+                <button class="clear-all" onclick="clearAllFilters()">reset --all</button>
+            </div>
+        </section>
+
+        <div class="results-line">
+            <span>[ <strong id="resultCount">0</strong> <span id="resultTotal"></span> machines matched ]</span>
             <span id="sortInfo"></span>
         </div>
 
-        <div id="tableContainer">
+        <div id="tableContainer" class="table-scroll">
             <table class="table-view">
                 <thead>
                     <tr>
-                        <th onclick="sortBy('name')">Machine <span class="sort-arrow" id="sort-name"></span></th>
-                        <th onclick="sortBy('os')">OS <span class="sort-arrow" id="sort-os"></span></th>
-                        <th onclick="sortBy('difficulty')">Difficulty <span class="sort-arrow" id="sort-difficulty"></span></th>
-                        <th>Techniques</th>
-                        <th>Certs</th>
-                        <th>Writeup</th>
+                        <th class="no-sort" aria-hidden="true"></th>
+                        <th class="no-sort" aria-hidden="true">#</th>
+                        <th onclick="sortBy('name')" id="th-name" aria-sort="ascending">Machine <span class="sort-arrow" id="sort-name"></span></th>
+                        <th onclick="sortBy('os')" id="th-os">OS <span class="sort-arrow" id="sort-os"></span></th>
+                        <th onclick="sortBy('difficulty')" id="th-difficulty">Difficulty <span class="sort-arrow" id="sort-difficulty"></span></th>
+                        <th onclick="sortBy('year')" id="th-year">Year <span class="sort-arrow" id="sort-year"></span></th>
+                        <th class="no-sort">Techniques</th>
+                        <th class="no-sort">Certs</th>
+                        <th class="no-sort">Writeup</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -564,10 +1144,11 @@ permalink: /finder/
         <div id="cardContainer" class="card-grid" style="display:none;"></div>
 
         <div id="emptyState" class="empty-state" style="display:none;">
-            <h3>No machines match your filters</h3>
-            <p>Try broadening your search or removing some filters.</p>
+            <span class="sig">[!]</span>
+            <h3>NO MATCH — 0 results returned</h3>
+            <p>query too restrictive. broaden search terms or run <strong>reset --all</strong>.</p>
         </div>
-    </div>
+    </main>
 
 <script>
 // Machine data
@@ -657,7 +1238,7 @@ const machines = [
     {name:"Stacked",os:"Linux",difficulty:"Insane",techniques:["AWS Lambda","XSS","LocalStack"],certs:[],writeup:"https://0xdf.gitlab.io/2022/03/19/htb-stacked.html",year:2021},
 ];
 
-// Deduplicate by name (Lame was added twice)
+// Deduplicate by name+os
 const seen = new Set();
 const uniqueMachines = machines.filter(m => {
     const key = m.name + m.os;
@@ -666,109 +1247,237 @@ const uniqueMachines = machines.filter(m => {
     return true;
 });
 
+// Constants
+const DIFFS = ['Easy', 'Medium', 'Hard', 'Insane'];
+const OSES = ['Linux', 'Windows', 'Other'];
+const STATES = ['pwned', 'unpwned'];
+
+// Pwned state — shared with the Knowledge Graph page
+const OWNED_KEY = 'htb-graph-owned';
+let ownedSet = new Set(JSON.parse(localStorage.getItem(OWNED_KEY) || '[]'));
+
+function saveOwned() {
+    localStorage.setItem(OWNED_KEY, JSON.stringify([...ownedSet]));
+}
+
+function toggleOwned(name) {
+    if (ownedSet.has(name)) ownedSet.delete(name);
+    else ownedSet.add(name);
+    saveOwned();
+    render();
+}
+
+// Sync across tabs / pages
+window.addEventListener('storage', e => {
+    if (e.key === OWNED_KEY) {
+        ownedSet = new Set(JSON.parse(e.newValue || '[]'));
+        render();
+    }
+});
+
 // State
 let currentView = 'table';
 let currentSort = { field: 'name', dir: 'asc' };
 let activeFilters = {
-    difficulty: new Set(['Easy', 'Medium', 'Hard', 'Insane']),
-    os: new Set(['Linux', 'Windows', 'Other']),
+    difficulty: new Set(DIFFS),
+    os: new Set(OSES),
     cert: new Set(),
-    technique: new Set()
+    technique: new Set(),
+    state: new Set(STATES)
 };
+let searchQuery = '';
 
 // Collect all techniques
 const allTechniques = [...new Set(uniqueMachines.flatMap(m => m.techniques))].sort();
 
-// Init
-function init() {
-    renderStats();
-    renderTechniqueFilters();
-    render();
-    document.getElementById('searchInput').addEventListener('input', render);
+function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-function renderStats() {
+// ===== URL hash state (shareable views) =====
+function saveState() {
+    const p = new URLSearchParams();
+    if (searchQuery) p.set('q', searchQuery);
+    if (currentView !== 'table') p.set('view', currentView);
+    if (currentSort.field !== 'name' || currentSort.dir !== 'asc') {
+        p.set('sort', currentSort.field);
+        p.set('dir', currentSort.dir);
+    }
+    if (activeFilters.difficulty.size !== DIFFS.length) p.set('d', [...activeFilters.difficulty].join(','));
+    if (activeFilters.os.size !== OSES.length) p.set('os', [...activeFilters.os].join(','));
+    if (activeFilters.cert.size) p.set('cert', [...activeFilters.cert].join(','));
+    if (activeFilters.technique.size) p.set('tech', [...activeFilters.technique].join('|'));
+    if (activeFilters.state.size !== STATES.length) p.set('st', [...activeFilters.state].join(','));
+    const hash = p.toString();
+    history.replaceState(null, '', hash ? '#' + hash : location.pathname + location.search);
+}
+
+function loadState() {
+    if (!location.hash) return;
+    const p = new URLSearchParams(location.hash.slice(1));
+    if (p.get('q')) searchQuery = p.get('q');
+    if (p.get('view') === 'cards') currentView = 'cards';
+    if (p.get('sort') && ['name', 'os', 'difficulty', 'year'].includes(p.get('sort'))) {
+        currentSort.field = p.get('sort');
+        currentSort.dir = p.get('dir') === 'desc' ? 'desc' : 'asc';
+    }
+    if (p.get('d')) activeFilters.difficulty = new Set(p.get('d').split(',').filter(v => DIFFS.includes(v)));
+    if (p.get('os')) activeFilters.os = new Set(p.get('os').split(',').filter(v => OSES.includes(v)));
+    if (p.get('cert')) activeFilters.cert = new Set(p.get('cert').split(','));
+    if (p.get('tech')) activeFilters.technique = new Set(p.get('tech').split('|').filter(v => allTechniques.includes(v)));
+    if (p.get('st')) activeFilters.state = new Set(p.get('st').split(',').filter(v => STATES.includes(v)));
+}
+
+function syncControls() {
+    document.getElementById('searchInput').value = searchQuery;
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+        const on = activeFilters[btn.dataset.filter].has(btn.dataset.value);
+        btn.classList.toggle('active', on);
+        btn.setAttribute('aria-pressed', on);
+    });
+    document.getElementById('btnTable').classList.toggle('active', currentView === 'table');
+    document.getElementById('btnCards').classList.toggle('active', currentView === 'cards');
+    document.getElementById('btnTable').setAttribute('aria-pressed', currentView === 'table');
+    document.getElementById('btnCards').setAttribute('aria-pressed', currentView === 'cards');
+    // Sort indicators
+    document.querySelectorAll('.sort-arrow').forEach(el => el.textContent = '');
+    document.querySelectorAll('.table-view th').forEach(th => { th.classList.remove('sorted'); th.removeAttribute('aria-sort'); });
+    const arrow = document.getElementById('sort-' + currentSort.field);
+    if (arrow) {
+        arrow.textContent = currentSort.dir === 'asc' ? '\u25B2' : '\u25BC';
+        const th = arrow.parentElement;
+        th.classList.add('sorted');
+        th.setAttribute('aria-sort', currentSort.dir === 'asc' ? 'ascending' : 'descending');
+    }
+    // Technique count badge
+    const badge = document.getElementById('techCount');
+    badge.hidden = activeFilters.technique.size === 0;
+    badge.textContent = activeFilters.technique.size;
+    if (activeFilters.technique.size > 0) {
+        document.getElementById('techFilters').classList.add('expanded');
+        document.getElementById('drawerToggle').setAttribute('aria-expanded', 'true');
+    }
+}
+
+// ===== Stats readout (live, reflects filtered set) =====
+function renderStats(filtered) {
     const bar = document.getElementById('statsBar');
     const total = uniqueMachines.length;
-    const linux = uniqueMachines.filter(m => m.os === 'Linux').length;
-    const windows = uniqueMachines.filter(m => m.os === 'Windows').length;
-    const easy = uniqueMachines.filter(m => m.difficulty === 'Easy').length;
-    const med = uniqueMachines.filter(m => m.difficulty === 'Medium').length;
-    const hard = uniqueMachines.filter(m => m.difficulty === 'Hard').length;
-    const ins = uniqueMachines.filter(m => m.difficulty === 'Insane').length;
+    const n = filtered.length;
+    const count = (list, k, v) => list.filter(m => m[k] === v).length;
+    const linux = count(filtered, 'os', 'Linux');
+    const windows = count(filtered, 'os', 'Windows');
+    const other = n - linux - windows;
+    const ownedInView = filtered.filter(m => ownedSet.has(m.name)).length;
+    const d = DIFFS.map(x => count(filtered, 'difficulty', x));
+    const pct = x => n ? (x / n * 100) : 0;
     bar.innerHTML = `
-        <div class="stat-pill"><strong>${total}</strong> Total</div>
-        <div class="stat-pill"><strong>${linux}</strong> Linux</div>
-        <div class="stat-pill"><strong>${windows}</strong> Windows</div>
-        <div class="stat-pill"><strong>${easy}</strong> Easy</div>
-        <div class="stat-pill"><strong>${med}</strong> Medium</div>
-        <div class="stat-pill"><strong>${hard}</strong> Hard</div>
-        <div class="stat-pill"><strong>${ins}</strong> Insane</div>
+        <div class="readout-cell accent"><span class="k">matched</span><span class="v">${n}<em> / ${total}</em></span></div>
+        <div class="readout-cell"><span class="k">linux</span><span class="v">${linux}</span></div>
+        <div class="readout-cell"><span class="k">windows</span><span class="v">${windows}</span></div>
+        <div class="readout-cell"><span class="k">other</span><span class="v">${other}</span></div>
+        <div class="readout-cell"><span class="k">pwned</span><span class="v" style="color:var(--green)">${ownedInView}<em> / ${ownedSet.size}</em></span></div>
+        <div class="readout-cell dist-cell">
+            <span class="k">difficulty spread</span>
+            <div class="dist-bar" role="img" aria-label="Difficulty distribution: ${d[0]} easy, ${d[1]} medium, ${d[2]} hard, ${d[3]} insane">
+                <span class="d-easy" style="width:${pct(d[0])}%"></span><span class="d-medium" style="width:${pct(d[1])}%"></span><span class="d-hard" style="width:${pct(d[2])}%"></span><span class="d-insane" style="width:${pct(d[3])}%"></span>
+            </div>
+            <div class="dist-legend">
+                <span><i style="background:var(--easy)"></i>E ${d[0]}</span>
+                <span><i style="background:var(--medium)"></i>M ${d[1]}</span>
+                <span><i style="background:var(--hard)"></i>H ${d[2]}</span>
+                <span><i style="background:var(--insane)"></i>I ${d[3]}</span>
+            </div>
+        </div>
     `;
 }
 
+// ===== Active-filter chips =====
+function renderChips() {
+    const host = document.getElementById('chipsHost');
+    const wrap = document.getElementById('activeChips');
+    const chips = [];
+    const narrowed = (set, all) => set.size > 0 && set.size < all.length;
+
+    if (narrowed(activeFilters.difficulty, DIFFS)) {
+        [...activeFilters.difficulty].forEach(v => chips.push({ f: 'difficulty', v }));
+    }
+    if (narrowed(activeFilters.os, OSES)) {
+        [...activeFilters.os].forEach(v => chips.push({ f: 'os', v }));
+    }
+    if (narrowed(activeFilters.state, STATES)) {
+        [...activeFilters.state].forEach(v => chips.push({ f: 'state', v }));
+    }
+    [...activeFilters.cert].forEach(v => chips.push({ f: 'cert', v }));
+    [...activeFilters.technique].forEach(v => chips.push({ f: 'technique', v }));
+
+    const anyRemoved = activeFilters.difficulty.size === 0 || activeFilters.os.size === 0;
+    if (!chips.length && !anyRemoved && !searchQuery) {
+        wrap.classList.remove('visible');
+        return;
+    }
+    wrap.classList.add('visible');
+    host.innerHTML = chips.map(c =>
+        `<span class="chip">${esc(c.f)}:${esc(c.v)}<button onclick="removeFilter('${c.f}','${esc(c.v)}')" aria-label="Remove filter ${esc(c.v)}">&times;</button></span>`
+    ).join('');
+}
+
+function removeFilter(filter, value) {
+    activeFilters[filter].delete(value);
+    syncControls();
+    render();
+}
+
+function clearAllFilters() {
+    activeFilters.difficulty = new Set(DIFFS);
+    activeFilters.os = new Set(OSES);
+    activeFilters.cert.clear();
+    activeFilters.technique.clear();
+    activeFilters.state = new Set(STATES);
+    searchQuery = '';
+    syncControls();
+    render();
+}
+
+// ===== Technique drawer =====
 function renderTechniqueFilters() {
     const container = document.getElementById('techFilters');
     container.innerHTML = allTechniques.map(t =>
-        `<button class="filter-btn" data-filter="technique" data-value="${t}" onclick="toggleFilter(this)">${t}</button>`
+        `<button class="filter-btn" data-filter="technique" data-value="${esc(t)}" onclick="toggleFilter(this)" aria-pressed="false">${esc(t)}</button>`
     ).join('');
 }
 
 function toggleTechniques() {
-    document.getElementById('techFilters').classList.toggle('expanded');
+    const el = document.getElementById('techFilters');
+    const expanded = el.classList.toggle('expanded');
+    document.getElementById('drawerToggle').setAttribute('aria-expanded', expanded);
 }
 
 function toggleFilter(btn) {
     const filter = btn.dataset.filter;
     const value = btn.dataset.value;
-
-    if (filter === 'cert' || filter === 'technique') {
-        if (activeFilters[filter].has(value)) {
-            activeFilters[filter].delete(value);
-            btn.classList.remove('active');
-        } else {
-            activeFilters[filter].add(value);
-            btn.classList.add('active');
-        }
-    } else {
-        if (activeFilters[filter].has(value)) {
-            activeFilters[filter].delete(value);
-            btn.classList.remove('active');
-        } else {
-            activeFilters[filter].add(value);
-            btn.classList.add('active');
-        }
-    }
+    const on = !activeFilters[filter].has(value);
+    if (on) activeFilters[filter].add(value);
+    else activeFilters[filter].delete(value);
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on);
     render();
 }
 
 function getFiltered() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-
+    const query = searchQuery.toLowerCase();
     return uniqueMachines.filter(m => {
-        // Difficulty filter
         if (!activeFilters.difficulty.has(m.difficulty)) return false;
-
-        // OS filter
         const osGroup = (m.os === 'Linux' || m.os === 'Windows') ? m.os : 'Other';
         if (!activeFilters.os.has(osGroup)) return false;
-
-        // Cert filter (if any active, machine must match at least one)
-        if (activeFilters.cert.size > 0) {
-            if (!m.certs.some(c => activeFilters.cert.has(c))) return false;
-        }
-
-        // Technique filter (if any active, machine must match at least one)
-        if (activeFilters.technique.size > 0) {
-            if (!m.techniques.some(t => activeFilters.technique.has(t))) return false;
-        }
-
-        // Search
+        if (activeFilters.cert.size > 0 && !m.certs.some(c => activeFilters.cert.has(c))) return false;
+        if (activeFilters.technique.size > 0 && !m.techniques.some(t => activeFilters.technique.has(t))) return false;
+        const ownedTag = ownedSet.has(m.name) ? 'pwned' : 'unpwned';
+        if (!activeFilters.state.has(ownedTag)) return false;
         if (query) {
-            const searchable = [m.name, m.os, m.difficulty, ...m.techniques, ...m.certs].join(' ').toLowerCase();
+            const searchable = [m.name, m.os, m.difficulty, m.year, ...m.techniques, ...m.certs].join(' ').toLowerCase();
             if (!searchable.includes(query)) return false;
         }
-
         return true;
     });
 }
@@ -800,49 +1509,48 @@ function sortBy(field) {
         currentSort.field = field;
         currentSort.dir = 'asc';
     }
-    // Update sort indicators
-    document.querySelectorAll('.sort-arrow').forEach(el => el.textContent = '');
-    const arrow = document.getElementById('sort-' + field);
-    if (arrow) arrow.textContent = currentSort.dir === 'asc' ? '\u25B2' : '\u25BC';
-    document.querySelectorAll('.table-view th').forEach(th => th.classList.remove('sorted'));
-    if (arrow) arrow.parentElement.classList.add('sorted');
+    syncControls();
     render();
 }
 
 function render() {
     const filtered = sortMachines(getFiltered());
     document.getElementById('resultCount').textContent = filtered.length;
+    document.getElementById('resultTotal').textContent = '/ ' + uniqueMachines.length;
+    document.getElementById('sortInfo').textContent =
+        'sort: ' + currentSort.field + ' ' + (currentSort.dir === 'asc' ? '\u2191' : '\u2193');
 
-    if (filtered.length === 0) {
-        document.getElementById('emptyState').style.display = 'block';
-        document.getElementById('tableContainer').style.display = 'none';
-        document.getElementById('cardContainer').style.display = 'none';
-        return;
-    }
+    renderStats(filtered);
+    renderChips();
+    saveState();
 
-    document.getElementById('emptyState').style.display = 'none';
+    const empty = filtered.length === 0;
+    document.getElementById('emptyState').style.display = empty ? 'block' : 'none';
+    document.getElementById('tableContainer').style.display = (!empty && currentView === 'table') ? 'block' : 'none';
+    document.getElementById('cardContainer').style.display = (!empty && currentView === 'cards') ? 'grid' : 'none';
 
-    if (currentView === 'table') {
-        document.getElementById('tableContainer').style.display = 'block';
-        document.getElementById('cardContainer').style.display = 'none';
-        renderTable(filtered);
-    } else {
-        document.getElementById('tableContainer').style.display = 'none';
-        document.getElementById('cardContainer').style.display = 'grid';
-        renderCards(filtered);
-    }
+    if (empty) return;
+    if (currentView === 'table') renderTable(filtered);
+    else renderCards(filtered);
 }
 
 function renderTable(list) {
     const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = list.map(m => `
-        <tr>
-            <td><a href="${m.writeup || '#'}" target="_blank" rel="noopener">${m.name}</a></td>
-            <td>${m.os}</td>
-            <td><span class="diff-dot ${m.difficulty.toLowerCase()}"></span>${m.difficulty}</td>
-            <td>${m.techniques.map(t => `<span class="tech-tag" onclick="filterByTech('${t}')">${t}</span>`).join('')}</td>
-            <td>${m.certs.map(c => `<span class="cert-badge">${c}</span>`).join('')}</td>
-            <td>${m.writeup ? `<a href="${m.writeup}" target="_blank" rel="noopener">0xdf</a>` : '-'}</td>
+    tbody.innerHTML = list.map((m, i) => `
+        <tr class="row-${m.difficulty.toLowerCase()}${ownedSet.has(m.name) ? ' row-owned' : ''}">
+            <td class="td-pwn"><button class="pwn-toggle${ownedSet.has(m.name) ? ' on' : ''}" onclick="toggleOwned('${esc(m.name)}')" aria-label="Mark ${esc(m.name)} as pwned" aria-pressed="${ownedSet.has(m.name)}"></button></td>
+            <td class="td-idx">${String(i + 1).padStart(2, '0')}</td>
+            <td class="td-name">${m.writeup
+                ? `<a href="${m.writeup}" target="_blank" rel="noopener">${esc(m.name)}</a>`
+                : `<a href="#" onclick="return false" style="cursor:default">${esc(m.name)}</a>`}</td>
+            <td class="td-os">${esc(m.os)}</td>
+            <td class="diff-cell ${m.difficulty.toLowerCase()}"><span class="dot"></span>${m.difficulty}</td>
+            <td class="td-year">${m.year}</td>
+            <td>${m.techniques.map(t => `<span class="tech-tag" onclick="filterByTech('${esc(t)}')">${esc(t)}</span>`).join('')}</td>
+            <td>${m.certs.map(c => `<span class="cert-badge">${esc(c)}</span>`).join('') || '<span style="color:var(--text-dim)">-</span>'}</td>
+            <td>${m.writeup
+                ? `<a class="writeup-link" href="${m.writeup}" target="_blank" rel="noopener">0xdf &#8599;</a>`
+                : `<span class="writeup-link none">n/a</span>`}</td>
         </tr>
     `).join('');
 }
@@ -850,46 +1558,66 @@ function renderTable(list) {
 function renderCards(list) {
     const container = document.getElementById('cardContainer');
     container.innerHTML = list.map(m => `
-        <div class="machine-card" onclick="if('${m.writeup}')window.open('${m.writeup}','_blank')">
+        <div class="machine-card card-${m.difficulty.toLowerCase()}${ownedSet.has(m.name) ? ' card-owned' : ''}" ${m.writeup ? `onclick="window.open('${m.writeup}','_blank')"` : ''}>
             <div class="card-header">
-                <span class="card-name">${m.name}</span>
-                <span class="card-diff ${m.difficulty.toLowerCase()}">${m.difficulty}</span>
+                <span class="card-name">${esc(m.name)}</span>
+                <span class="card-pwn">
+                    <button class="pwn-toggle${ownedSet.has(m.name) ? ' on' : ''}" onclick="event.stopPropagation();toggleOwned('${esc(m.name)}')" aria-label="Mark ${esc(m.name)} as pwned" aria-pressed="${ownedSet.has(m.name)}"></button>
+                    <span class="card-diff ${m.difficulty.toLowerCase()}">${m.difficulty}</span>
+                </span>
             </div>
-            <div class="card-meta">${m.os} | ${m.year}</div>
+            <div class="card-meta">${esc(m.os)} // ${m.year}</div>
             <div class="card-techniques">
-                ${m.techniques.map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                ${m.techniques.map(t => `<span class="tech-tag" onclick="event.stopPropagation();filterByTech('${esc(t)}')">${esc(t)}</span>`).join('')}
             </div>
-            ${m.certs.length ? `<div class="card-links">${m.certs.map(c => `<span class="cert-badge">${c}</span>`).join('')}</div>` : ''}
+            <div class="card-footer">
+                <span>${m.certs.map(c => `<span class="cert-badge">${esc(c)}</span>`).join('') || '<span style="font-family:var(--mono);font-size:0.65rem;color:var(--text-dim)">no cert mapping</span>'}</span>
+                ${m.writeup ? `<a class="writeup-link" href="${m.writeup}" target="_blank" rel="noopener" onclick="event.stopPropagation()">writeup &#8599;</a>` : ''}
+            </div>
         </div>
     `).join('');
 }
 
 function filterByTech(tech) {
     activeFilters.technique.add(tech);
-    // Activate the button
-    document.querySelectorAll('[data-filter="technique"]').forEach(btn => {
-        if (btn.dataset.value === tech) btn.classList.add('active');
-    });
-    // Expand technique filters
     document.getElementById('techFilters').classList.add('expanded');
+    document.getElementById('drawerToggle').setAttribute('aria-expanded', 'true');
+    syncControls();
     render();
 }
 
 function setView(view) {
     currentView = view;
-    document.getElementById('btnTable').classList.toggle('active', view === 'table');
-    document.getElementById('btnCards').classList.toggle('active', view === 'cards');
+    syncControls();
     render();
 }
 
-// Keyboard shortcut: / to focus search
+// ===== Init =====
+function init() {
+    renderTechniqueFilters();
+    loadState();
+    syncControls();
+    render();
+    const input = document.getElementById('searchInput');
+    input.addEventListener('input', () => { searchQuery = input.value; render(); });
+}
+
+// Keyboard shortcuts: / focus search, esc clear/blur
 document.addEventListener('keydown', e => {
-    if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
+    const input = document.getElementById('searchInput');
+    if (e.key === '/' && document.activeElement !== input) {
         e.preventDefault();
-        document.getElementById('searchInput').focus();
+        input.focus();
+        input.select();
     }
     if (e.key === 'Escape') {
-        document.getElementById('searchInput').blur();
+        if (document.activeElement === input && input.value) {
+            input.value = '';
+            searchQuery = '';
+            render();
+        } else {
+            input.blur();
+        }
     }
 });
 
